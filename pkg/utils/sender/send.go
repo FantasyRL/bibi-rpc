@@ -1,8 +1,8 @@
 package sender
 
 import (
-	"bibi/biz/dal/db"
-	"bibi/pkg/conf"
+	"bibi/config"
+	"bibi/rpc/user/dal/db"
 	"bytes"
 	"encoding/base64"
 	"github.com/jordan-wright/email"
@@ -16,7 +16,7 @@ func SendEmail(user *db.User, buf *bytes.Buffer) error {
 
 	e := &email.Email{
 		To:      []string{user.Email},
-		From:    conf.Sender.From,
+		From:    config.Sender.From,
 		Subject: "您 Steam 愿望单上的 《天使☆纷扰 RE-BOOT!》无法购买！",
 		HTML:    BuildSendMessage(user.UserName, qrcode),
 		Headers: textproto.MIMEHeader{},
@@ -30,7 +30,7 @@ func SendEmail(user *db.User, buf *bytes.Buffer) error {
 	//}
 	//attachment.HTMLRelated = true
 
-	return e.Send(conf.Sender.Host+":"+conf.Sender.Port, smtp.PlainAuth("", conf.Sender.Sender, conf.Sender.Password, conf.Sender.Host))
+	return e.Send(config.Sender.Host+":"+config.Sender.Port, smtp.PlainAuth("", config.Sender.Sender, config.Sender.Password, config.Sender.Host))
 }
 func BuildSendMessage(name string, base64png []byte) []byte {
 	msg1 := `

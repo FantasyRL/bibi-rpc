@@ -14,7 +14,7 @@ var (
 	Server   *server
 	Service  *service
 	RabbitMQ *rabbitMQ
-	Sender   *EmailSender
+	Sender   *email
 
 	runtimeViper = viper.New()
 )
@@ -49,6 +49,7 @@ func configMapping(serviceName string) {
 	Etcd = &c.Etcd
 	Redis = &c.Redis
 	OSS = &c.OSS
+	Sender = &c.Email
 
 	addrList := runtimeViper.GetStringSlice("services." + serviceName + ".addr")
 	Service = &service{

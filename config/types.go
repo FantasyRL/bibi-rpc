@@ -40,7 +40,7 @@ type rabbitMQ struct {
 	Password string
 }
 
-type EmailSender struct {
+type email struct {
 	Host     string
 	Port     string
 	Sender   string
@@ -56,4 +56,5 @@ type config struct {
 	RabbitMQ rabbitMQ
 	Redis    redis
 	OSS      oss
+	Email    email
 }

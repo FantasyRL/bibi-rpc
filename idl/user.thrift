@@ -33,8 +33,9 @@ struct RegisterResponse {
 //}
 
 struct Switch2FARequest{
-    1:i64 action_type,
-    2:optional string totp,
+    1:i64 user_id,
+    2:i64 action_type,
+    3:optional string totp,
 }
 
 struct Switch2FAResponse{

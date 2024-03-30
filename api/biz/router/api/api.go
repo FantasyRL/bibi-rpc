@@ -25,7 +25,7 @@ func Register(r *server.Hertz) {
 		}
 		{
 			_user := _bibi.Group("/user", _userMw()...)
-			_user.GET("/", append(_infoMw(), api.Info)...)
+			_user.GET("/info", append(_infoMw(), api.Info)...)
 			_user.POST("/switch2fa", append(_switch2faMw(), api.Switch2FA)...)
 			{
 				_avatar := _user.Group("/avatar", _avatarMw()...)
@@ -39,6 +39,13 @@ func Register(r *server.Hertz) {
 				_register := _user.Group("/register", _registerMw()...)
 				_register.POST("/", append(_register0Mw(), api.Register)...)
 			}
+		}
+		{
+			_video := _bibi.Group("/video", _videoMw()...)
+			_video.GET("/hot", append(_hotvideoMw(), api.HotVideo)...)
+			_video.GET("/published", append(_listvideoMw(), api.ListVideo)...)
+			_video.POST("/search", append(_searchvideoMw(), api.SearchVideo)...)
+			_video.POST("/upload", append(_putvideoMw(), api.PutVideo)...)
 		}
 	}
 }
