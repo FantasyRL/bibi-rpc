@@ -47,6 +47,8 @@ docker run -d --net=host bibi-demo go run bibi # 运行程序
 2. [api/biz/rpc](api/biz/rpc)作为中转，向rpc服务器发送请求
 3. [rpc/user/handler.go](rpc/user/handler.go)接收请求，作为rpc服务器中的handler
 
+### 0330
+
 ## Todo...
 
 在idl中添加optional以优化response(done)
