@@ -50,10 +50,10 @@ struct LoginRequest {
 struct LoginResponse {
     1: base.BaseResp base,
     2: optional User user,
-    3: optional string token,
 }
 
 struct InfoRequest {
+    1:i64 user_id,
 }
 
 struct InfoResponse {
@@ -62,7 +62,8 @@ struct InfoResponse {
 }
 
 struct AvatarRequest{
-    1:binary avatar_file,
+    1:i64 user_id,
+    2:binary avatar_file,
 }
 struct AvatarResponse{
     1: base.BaseResp base,

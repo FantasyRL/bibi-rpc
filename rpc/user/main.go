@@ -20,6 +20,7 @@ var listenAddr string
 func Init() {
 	config.Init(constants.UserServiceName)
 	dal.Init()
+
 }
 
 func main() {

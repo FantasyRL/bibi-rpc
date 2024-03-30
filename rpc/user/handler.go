@@ -1,13 +1,18 @@
 package main
 
 import (
+	"bibi/config"
 	user "bibi/kitex_gen/user"
 	"bibi/kitex_gen/user/userhandler"
 	"bibi/pkg/constants"
+	"bibi/pkg/errno"
 	"bibi/pkg/pack"
+	"bibi/rpc/user/dal/db"
 	"bibi/rpc/user/service"
 	"context"
+	"fmt"
 	"github.com/cloudwego/kitex/client"
+	"golang.org/x/sync/errgroup"
 )
 
 // UserHandlerImpl implements the last service interface defined in the IDL.
@@ -33,7 +38,7 @@ func (s *UserHandlerImpl) Register(ctx context.Context, req *user.RegisterReques
 
 	resp.UserId = &userResp.ID
 
-	return resp, nil
+	return
 }
 
 // Login implements the UserHandlerImpl interface.
@@ -47,18 +52,54 @@ func (s *UserHandlerImpl) Login(ctx context.Context, req *user.LoginRequest) (re
 		return resp, nil
 	}
 	resp.User = service.BuildUserResp(userResp)
-	return resp, nil
+	return
 }
 
 // Info implements the UserHandlerImpl interface.
 func (s *UserHandlerImpl) Info(ctx context.Context, req *user.InfoRequest) (resp *user.InfoResponse, err error) {
-	// TODO: Your code here...
+	resp = new(user.InfoResponse)
+
+	userResp, err := service.NewUserService(ctx).Info(req)
+
+	resp.Base = pack.BuildBaseResp(err)
+	if err != nil {
+		return resp, nil
+	}
+	resp.User = service.BuildUserResp(userResp)
 	return
 }
 
 // Avatar implements the UserHandlerImpl interface.
 func (s *UserHandlerImpl) Avatar(ctx context.Context, req *user.AvatarRequest) (resp *user.AvatarResponse, err error) {
-	// TODO: Your code here...
+	resp = new(user.AvatarResponse)
+
+	//开启并发
+	var eg errgroup.Group
+	//上传至OSS
+	eg.Go(func() error { //同时Add(1)
+		err = service.NewAvatarService(ctx).UploadAvatar(req)
+		if err != nil {
+			return errno.UploadFileError
+		}
+		return nil
+	})
+	//上传url至数据库
+	UserResp := new(db.User)
+	eg.Go(func() error { //Add(1)
+		avatarUrl := fmt.Sprintf("%s/%s/%d", config.OSS.EndPoint, config.OSS.MainDirectory, req.UserId)
+		UserResp, err = service.NewAvatarService(ctx).PutAvatar(req.UserId, avatarUrl)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	//Wait实现了错误处理与sync，仅返回第一个发生的错误
+	if err = eg.Wait(); err != nil {
+		resp.Base = pack.BuildBaseResp(err)
+		return resp, nil
+	}
+	resp.Base = pack.BuildBaseResp(nil)
+	resp.User = service.BuildUserResp(UserResp)
 	return
 }
 

@@ -37,9 +37,9 @@ func (s *UserService) Login(req *user.LoginRequest) (*db.User, error) {
 	return userResp, nil
 }
 
-func (s *UserService) Info(id int64) (*db.User, error) {
+func (s *UserService) Info(req *user.InfoRequest) (*db.User, error) {
 	userModel := &db.User{
-		ID: id,
+		ID: req.UserId,
 	}
 	return db.QueryUserByID(userModel)
 }

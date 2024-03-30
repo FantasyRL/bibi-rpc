@@ -49,11 +49,23 @@ struct LoginRequest {
 struct LoginResponse {
     1: base.BaseResp base,
     2: optional User user,
-    3: optional string token,
+    3: optional string access_token,
+    4: optional string refresh_token,
 }
 
 struct InfoRequest {
+    1:i64 user_id,
 }
+
+struct GetAccessTokenRequest{
+
+}
+
+struct GetAccessTokenResponse{
+    1:base.BaseResp base,
+    2:optional string access_token,
+}
+
 
 struct InfoResponse {
     1: base.BaseResp base,
@@ -70,8 +82,9 @@ struct AvatarResponse{
 service UserHandler {
     RegisterResponse Register(1: RegisterRequest req)(api.post="/bibi/user/register/"),
     LoginResponse Login(1: LoginRequest req)(api.post="/bibi/user/login/"),
-    InfoResponse Info(1: InfoRequest req)(api.get="/bibi/user/"),
+    InfoResponse Info(1: InfoRequest req)(api.get="/bibi/user/info"),
     AvatarResponse Avatar(1:AvatarRequest req)(api.put="/bibi/user/avatar/upload"),
 //    OTP2FAResp OTP2FA(1:OTP2FAReq req)(api.get="/bibi/user/2fa"),
     Switch2FAResponse Switch2FA(1:Switch2FARequest req)(api.post="/bibi/user/switch2fa"),
+    GetAccessTokenResponse GetAccessToken(1:GetAccessTokenRequest req)(api.get="/bibi/access_token/get")
 }

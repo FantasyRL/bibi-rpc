@@ -23,10 +23,7 @@ func _userMw() []app.HandlerFunc {
 }
 
 func _infoMw() []app.HandlerFunc {
-	return []app.HandlerFunc{
-		jwt.JwtMiddleware.MiddlewareFunc(),
-		//jwt.JwtMiddleware.RefreshToken,
-	}
+	return nil
 }
 
 func _switch2faMw() []app.HandlerFunc {
@@ -40,8 +37,9 @@ func _avatarMw() []app.HandlerFunc {
 }
 
 func _avatar0Mw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
 }
 
 func _loginMw() []app.HandlerFunc {
@@ -63,4 +61,16 @@ func _registerMw() []app.HandlerFunc {
 func _register0Mw() []app.HandlerFunc {
 	// your code...
 	return nil
+}
+
+func _access_tokenMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getaccesstokenMw() []app.HandlerFunc {
+	return []app.HandlerFunc{
+		jwt.JwtRefreshMiddleware.MiddlewareFunc(),
+		//jwt.JwtMiddleware.RefreshToken,
+	}
 }
