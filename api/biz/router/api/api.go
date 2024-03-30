@@ -20,6 +20,10 @@ func Register(r *server.Hertz) {
 	{
 		_bibi := root.Group("/bibi", _bibiMw()...)
 		{
+			_access_token := _bibi.Group("/access_token", _access_tokenMw()...)
+			_access_token.GET("/get", append(_getaccesstokenMw(), api.GetAccessToken)...)
+		}
+		{
 			_user := _bibi.Group("/user", _userMw()...)
 			_user.GET("/", append(_infoMw(), api.Info)...)
 			_user.POST("/switch2fa", append(_switch2faMw(), api.Switch2FA)...)

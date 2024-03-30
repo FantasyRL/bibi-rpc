@@ -36,4 +36,5 @@ _testmain.go
 dumped_hertz_remote_config.json
 /pkg/data
 hz_update.sh
+kitex_update.sh
 /config/config.yaml

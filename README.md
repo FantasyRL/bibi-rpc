@@ -36,7 +36,7 @@ docker run -d --net=host bibi-demo go run bibi # 运行程序
 
 ## 重构相关:
 ### 0324
-花了一整天学习rpc与kitex-demo
+花了一整天学习rpc、kitex-demo、tiktok(west-2 online)
 
 ### 0325
 优化了config(感谢强大的viper),添加了constants包
@@ -48,6 +48,7 @@ docker run -d --net=host bibi-demo go run bibi # 运行程序
 3. [rpc/user/handler.go](rpc/user/handler.go)接收请求，作为rpc服务器中的handler
 
 ### 0330
+学了一下用shell自动运行命令
 
 ## Todo...
 
@@ -61,6 +62,6 @@ es管理日志
 
 将会更加贴合接口文档需求
 
-将会添加双token(为什么还不添加，是不想吗)
+将会添加双token(目前没有思路在hertz_jwt中添加双token)
 
 gormopentracing,Snowflake

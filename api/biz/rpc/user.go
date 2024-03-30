@@ -5,7 +5,6 @@ import (
 	"bibi/kitex_gen/user"
 	"bibi/kitex_gen/user/userhandler"
 	"bibi/pkg/constants"
-	"bibi/pkg/errno"
 	"context"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
@@ -58,16 +57,32 @@ func UserLogin(ctx context.Context, req *user.LoginRequest) (*user.LoginResponse
 	return resp, nil
 }
 
-func UserInfo(ctx context.Context, req *user.InfoRequest) (*user.User, error) {
+func UserInfo(ctx context.Context, req *user.InfoRequest) (*user.InfoResponse, error) {
 	resp, err := userClient.Info(ctx, req)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if resp.Base.Code != errno.SuccessCode {
-		return nil, errno.NewErrNo(resp.Base.Code, resp.Base.Msg)
+	return resp, nil
+}
+
+func UserSwitch2FA(ctx context.Context, req *user.Switch2FARequest) (*user.Switch2FAResponse, error) {
+	resp, err := userClient.Switch2FA(ctx, req)
+
+	if err != nil {
+		return nil, err
 	}
 
-	return resp.User, nil
+	return resp, nil
+}
+
+func UserAvatar(ctx context.Context, req *user.AvatarRequest) (*user.AvatarResponse, error) {
+	resp, err := userClient.Avatar(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
