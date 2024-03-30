@@ -99,7 +99,7 @@ func Init() {
 				Code: errno.AuthFailedErrCode,
 				Msg:  message,
 			})
-			c.JSON(consts.StatusOK, resp.Base)
+			c.JSON(consts.StatusOK, resp)
 		},
 		HTTPStatusMessageFunc: func(e error, ctx context.Context, c *app.RequestContext) string {
 			resp := pack.BuildBaseResp(e)

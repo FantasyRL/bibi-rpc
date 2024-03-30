@@ -152,10 +152,7 @@ func Avatar(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	v, ok := c.Get("current_user_id")
-	if !ok {
-		err = errno.ParamError
-	}
+	v, _ := c.Get("current_user_id")
 	id, _ := v.(int64)
 
 	fileBinary, err := pack.FileToByte(file)
@@ -207,6 +204,21 @@ func Switch2FA(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.Switch2FAResponse)
 
+	v, _ := c.Get("current_user_id")
+	id, _ := v.(int64)
+
+	rpcResp, err := rpc.UserSwitch2FA(ctx, &user.Switch2FARequest{
+		UserId:     id,
+		ActionType: req.ActionType,
+		Totp:       req.Totp,
+	})
+
+	if err != nil {
+		pack.SendRPCFailResp(c, err)
+		return
+	}
+
+	resp.Base = pack.ConvertToAPIBaseResp(rpcResp.Base)
 	c.JSON(consts.StatusOK, resp)
 }
 

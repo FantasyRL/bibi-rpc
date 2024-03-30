@@ -105,6 +105,14 @@ func (s *UserHandlerImpl) Avatar(ctx context.Context, req *user.AvatarRequest) (
 
 // Switch2FA implements the UserHandlerImpl interface.
 func (s *UserHandlerImpl) Switch2FA(ctx context.Context, req *user.Switch2FARequest) (resp *user.Switch2FAResponse, err error) {
-	// TODO: Your code here...
-	return
+	resp = new(user.Switch2FAResponse)
+
+	switch req.ActionType {
+	case 0, 1:
+		err = service.NewUserService(ctx).Switch2faType(req)
+		resp.Base = pack.BuildBaseResp(err)
+	default:
+		resp.Base = pack.BuildBaseResp(errno.ParamError)
+	}
+	return resp, nil
 }

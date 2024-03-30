@@ -27,8 +27,9 @@ func _infoMw() []app.HandlerFunc {
 }
 
 func _switch2faMw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
 }
 
 func _avatarMw() []app.HandlerFunc {
@@ -73,4 +74,29 @@ func _getaccesstokenMw() []app.HandlerFunc {
 		jwt.JwtRefreshMiddleware.MiddlewareFunc(),
 		//jwt.JwtMiddleware.RefreshToken,
 	}
+}
+
+func _videoMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _hotvideoMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _listvideoMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _searchvideoMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _putvideoMw() []app.HandlerFunc {
+	// your code...
+	return nil
 }

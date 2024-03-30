@@ -6,10 +6,11 @@
 
 (使用前请先关闭本机的mysql与redis服务)
 
+(由于重构为rpc架构，暂时不能快速启动)
 `快速启动`
 ```bash
 #oss与email的配置需自行填写
-mv pkg/conf/config-example.yaml pkg/conf/config.yaml
+mv config/config-example.yaml config/config.yaml
 docker-compose up -d # 启动相关容器
 docker build -t bibi-demo . # 构建镜像
 docker run -d --net=host bibi-demo go run bibi # 运行程序

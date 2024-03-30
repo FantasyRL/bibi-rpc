@@ -1,12 +1,12 @@
 package main
 
 import (
-	user "kitex_gen/user/userhandler"
+	video "bibi/kitex_gen/video/videohandler"
 	"log"
 )
 
 func main() {
-	svr := user.NewServer(new(UserHandlerImpl))
+	svr := video.NewServer(new(VideoHandlerImpl))
 
 	err := svr.Run()
 
