@@ -48,7 +48,11 @@ docker run -d --net=host bibi-demo go run bibi # 运行程序
 3. [rpc/user/handler.go](rpc/user/handler.go)接收请求，作为rpc服务器中的handler
 
 ### 0330
-学了一下用shell自动运行命令
+学了一下用shell自动运行命令(太好用了)
+
+实现了双token:创建了两个hertz_jwt中间件，一个负责access，一个负责refresh，并添加一个用于get access by refresh的接口
+
+继续重构中...
 
 ## Todo...
 
@@ -58,10 +62,10 @@ es管理日志
 
 将会改进comment缓存的逻辑
 
-将会进行重构rpc以改进混沌的handler层
+将会进行重构rpc以改进混沌的handler层(doing)
 
-将会更加贴合接口文档需求
+将会更加贴合接口文档需求(doing)
 
-将会添加双token(目前没有思路在hertz_jwt中添加双token)
+将会添加双token(done)
 
 gormopentracing,Snowflake
