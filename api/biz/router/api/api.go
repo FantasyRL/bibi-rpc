@@ -24,6 +24,20 @@ func Register(r *server.Hertz) {
 			_access_token.GET("/get", append(_getaccesstokenMw(), api.GetAccessToken)...)
 		}
 		{
+			_interaction := _bibi.Group("/interaction", _interactionMw()...)
+			{
+				_comment := _interaction.Group("/comment", _commentMw()...)
+				_comment.POST("/create", append(_commentcreateMw(), api.CommentCreate)...)
+				_comment.POST("/delete", append(_commentdeleteMw(), api.CommentDelete)...)
+				_comment.POST("/list", append(_commentlistMw(), api.CommentList)...)
+			}
+			{
+				_like := _interaction.Group("/like", _likeMw()...)
+				_like.POST("/action", append(_likeactionMw(), api.LikeAction)...)
+				_like.GET("/list", append(_likelistMw(), api.LikeList)...)
+			}
+		}
+		{
 			_user := _bibi.Group("/user", _userMw()...)
 			_user.GET("/info", append(_infoMw(), api.Info)...)
 			_user.POST("/switch2fa", append(_switch2faMw(), api.Switch2FA)...)

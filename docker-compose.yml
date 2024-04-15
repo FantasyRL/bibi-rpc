@@ -1,6 +1,8 @@
 version: '3'
 
-
+networks:
+  bibi:
+    driver: bridge
 
 services:
   mysql:
@@ -8,7 +10,7 @@ services:
     container_name: bibi
     volumes:
       - ./config/sql:/docker-entrypoint-initdb.d
-      - ./pkg/data/mysql:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql
     ports:
       - "3366:3306"
     environment:
@@ -18,7 +20,8 @@ services:
     security_opt:
       - seccomp:unconfined
     restart: always
-    network_mode: bridge
+    networks:
+      - bibi
 
   redis:
     image: redis:6.0.16
@@ -26,13 +29,12 @@ services:
     ports:
       - "6399:6379"
     volumes:
-      - ./pkg/data/redis/data:/data
+      - ./data/redis/data:/data
       - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
-      - ./pkg/data/redis/logs:/logs
-    command:
-    - redis-server /usr/local/etc/redis/redis.conf
+      - ./data/redis/logs:/logs
     restart: always
-    network_mode: bridge
+    networks:
+      - bibi
 
 
   etcd:
@@ -42,9 +44,49 @@ services:
       - "2379:2379"
       - "2380:2380"
     volumes:
-      - ./pkg/data/etcd/data:/bitnami/etcd-data
+      - ./data/etcd/data:/bitnami/etcd-data
     environment:
       - TZ=Asia/Shanghai
       - ALLOW_NONE_AUTHENTICATION=yes
       - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
-    network_mode: bridge
+    networks:
+      - bibi
+
+  elasticsearch:
+    image: elasticsearch:8.12.2
+    container_name: elasticsearch
+    environment:
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m" # 加大内存设置
+      discovery.type: single-node
+      TZ: Asia/Shanghai
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./config/elasticsearch/config:/usr/share/elasticsearch/config
+      - ./config/elasticsearch/plugins:/usr/share/elasticsearch/plugins
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    restart: always
+    networks:
+      - bibi
+
+  kibana:
+    image: kibana:8.12.2
+    container_name: kibana
+    environment:
+      - XPACK_GRAPH_ENABLED=true
+      - TIMELION_ENABLED=true
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./config/kibana:/usr/share/kibana/config
+      - ./data/kibana:/usr/share/kibana/data
+    networks:
+      - bibi

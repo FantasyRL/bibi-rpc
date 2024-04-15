@@ -21,6 +21,7 @@ func Init() {
 }
 func main() {
 	Init()
+
 	//获取addr
 	for index, addr := range config.Service.AddrList {
 		if ok := utils.AddrCheck(addr); ok {

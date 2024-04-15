@@ -70,6 +70,16 @@ struct AvatarResponse{
     1: base.BaseResp base,
     2: optional User user,
 }
+
+//rpc
+struct GetAuthorRequest{
+    1:list<i64> author_id_list,
+}
+
+struct GetAuthorResponse{
+    1:list<User> author_list,
+}
+
 service UserHandler {
     RegisterResponse Register(1: RegisterRequest req)(api.post="/bibi/user/register/"),
     LoginResponse Login(1: LoginRequest req)(api.post="/bibi/user/login/"),
@@ -77,4 +87,6 @@ service UserHandler {
     AvatarResponse Avatar(1:AvatarRequest req)(api.put="/bibi/user/avatar/upload"),
 //    OTP2FAResp OTP2FA(1:OTP2FAReq req)(api.get="/bibi/user/2fa"),
     Switch2FAResponse Switch2FA(1:Switch2FARequest req)(api.post="/bibi/user/switch2fa"),
+
+    GetAuthorResponse GetAuthor(1:GetAuthorRequest req),
 }
