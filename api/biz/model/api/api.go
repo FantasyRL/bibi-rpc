@@ -3228,9 +3228,9 @@ func (p *Video) String() string {
 }
 
 type PutVideoRequest struct {
-	VideoFile []byte `thrift:"video_file,1" form:"video_file" json:"video_file" query:"video_file"`
-	Title     string `thrift:"title,2" form:"title" json:"title" query:"title"`
-	Cover     []byte `thrift:"cover,3" form:"cover" json:"cover" query:"cover"`
+	VideoFile []byte `thrift:"video_file,1,required" form:"video_file,required" json:"video_file,required" query:"video_file,required"`
+	Title     string `thrift:"title,2,required" form:"title,required" json:"title,required" query:"title,required"`
+	Cover     []byte `thrift:"cover,3,required" form:"cover,required" json:"cover,required" query:"cover,required"`
 }
 
 func NewPutVideoRequest() *PutVideoRequest {
@@ -3259,6 +3259,9 @@ func (p *PutVideoRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetVideoFile bool = false
+	var issetTitle bool = false
+	var issetCover bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -3279,6 +3282,7 @@ func (p *PutVideoRequest) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
+				issetVideoFile = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3287,6 +3291,7 @@ func (p *PutVideoRequest) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
+				issetTitle = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3295,6 +3300,7 @@ func (p *PutVideoRequest) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
+				issetCover = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -3311,6 +3317,20 @@ func (p *PutVideoRequest) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
+	if !issetVideoFile {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTitle {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCover {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
 	return nil
 ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -3325,6 +3345,8 @@ ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_PutVideoRequest[fieldId]))
 }
 
 func (p *PutVideoRequest) ReadField1(iprot thrift.TProtocol) error {

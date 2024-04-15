@@ -158,6 +158,7 @@ func SearchVideo(ctx context.Context, c *app.RequestContext) {
 
 	rpcResp, err := rpc.VideoSearch(ctx, &video.SearchVideoRequest{
 		PageNum: req.PageNum,
+		Param:   req.Param,
 	})
 	if err != nil {
 		pack.SendRPCFailResp(c, err)

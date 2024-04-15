@@ -16,6 +16,21 @@ paths:
       - application/json
       responses: {}
       summary: get_access-token
+  /bibi/interaction/comment/create:
+    post:
+      responses: {}
+  /bibi/interaction/comment/delete:
+    post:
+      responses: {}
+  /bibi/interaction/comment/list:
+    post:
+      responses: {}
+  /bibi/interaction/like/action:
+    post:
+      responses: {}
+  /bibi/interaction/like/list:
+    get:
+      responses: {}
   /bibi/user/avatar/upload:
     put:
       consumes:
@@ -143,10 +158,47 @@ paths:
       responses: {}
   /bibi/video/published:
     get:
+      consumes:
+      - json/form
+      description: list user's videos
+      parameters:
+      - description: 页码
+        in: query
+        name: page_num
+        required: true
+        type: integer
+      - description: access-token
+        in: header
+        name: access-token
+        type: string
+      - description: refresh-token
+        in: header
+        name: refresh-token
+        type: string
+      produces:
+      - application/json
       responses: {}
+      summary: ListVideo
   /bibi/video/search:
     post:
+      consumes:
+      - json/form
+      description: search videos
+      parameters:
+      - description: 页码
+        in: query
+        name: page_num
+        required: true
+        type: integer
+      - description: 搜索内容
+        in: query
+        name: param
+        required: true
+        type: string
+      produces:
+      - application/json
       responses: {}
+      summary: SearchVideo
   /bibi/video/upload:
     post:
       consumes:

@@ -105,9 +105,9 @@ struct Video{
 }
 
 struct PutVideoRequest{
-    1:binary video_file,
-    2:string title,
-    3:binary cover,
+    1:required binary video_file,
+    2:required string title,
+    3:required binary cover,
 }
 
 struct PutVideoResponse{
