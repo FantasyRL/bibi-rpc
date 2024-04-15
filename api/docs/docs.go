@@ -37,6 +37,31 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/bibi/interaction/comment/create": {
+            "post": {
+                "responses": {}
+            }
+        },
+        "/bibi/interaction/comment/delete": {
+            "post": {
+                "responses": {}
+            }
+        },
+        "/bibi/interaction/comment/list": {
+            "post": {
+                "responses": {}
+            }
+        },
+        "/bibi/interaction/like/action": {
+            "post": {
+                "responses": {}
+            }
+        },
+        "/bibi/interaction/like/list": {
+            "get": {
+                "responses": {}
+            }
+        },
         "/bibi/user/avatar/upload": {
             "put": {
                 "description": "revise user's avatar",
@@ -223,11 +248,64 @@ const docTemplate = `{
         },
         "/bibi/video/published": {
             "get": {
+                "description": "list user's videos",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "ListVideo",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page_num",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "access-token",
+                        "name": "access-token",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
+                        "description": "refresh-token",
+                        "name": "refresh-token",
+                        "in": "header"
+                    }
+                ],
                 "responses": {}
             }
         },
         "/bibi/video/search": {
             "post": {
+                "description": "search videos",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "SearchVideo",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page_num",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "搜索内容",
+                        "name": "param",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {}
             }
         },
