@@ -60,23 +60,23 @@ func Update2FA(totp string, uid int64) error {
 
 func PutAvatar(ctx context.Context, userModel *User) (*User, error) {
 	userResp := new(User)
-	if err := DB.Model(User{}).Where("id = ?", userModel.ID).Update("avatar", userModel.Avatar).First(userResp).Error; err != nil {
+	if err := DB.WithContext(ctx).Where("id = ?", userModel.ID).Update("avatar", userModel.Avatar).First(userResp).Error; err != nil {
 		return nil, err
 	}
 	return userResp, nil
 }
 
-func QueryUserByID(userModel *User) (*User, error) {
+func QueryUserByID(ctx context.Context, userModel *User) (*User, error) {
 	userResp := new(User)
-	if err := DB.Model(User{}).Where("id = ?", userModel.ID).First(&userResp).Error; err != nil {
+	if err := DB.WithContext(ctx).Where("id = ?", userModel.ID).First(&userResp).Error; err != nil {
 		return nil, err
 	}
 	return userResp, nil
 }
 
-func QueryUserByIDList(uidList []int64) ([]User, error) {
+func QueryUserByIDList(ctx context.Context, uidList []int64) ([]User, error) {
 	userResp := new([]User)
-	if err := DB.Model(User{}).Where("id IN ?", uidList).Find(userResp).Error; err != nil {
+	if err := DB.WithContext(ctx).Where("id IN ?", uidList).Find(userResp).Error; err != nil {
 		return nil, err
 	}
 	return *userResp, nil

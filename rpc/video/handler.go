@@ -82,8 +82,15 @@ func (s *VideoHandlerImpl) ListVideo(ctx context.Context, req *video.ListUserVid
 
 // SearchVideo implements the VideoHandlerImpl interface.
 func (s *VideoHandlerImpl) SearchVideo(ctx context.Context, req *video.SearchVideoRequest) (resp *video.SearchVideoResponse, err error) {
-	// TODO: Your code here...
-	return
+	resp = new(video.SearchVideoResponse)
+	videoResp, count, err := service.NewVideoService(ctx).SearchVideo(req)
+	resp.Base = pack.BuildBaseResp(err)
+	if err != nil {
+		return resp, nil
+	}
+	resp.VideoList = service.BuildVideoListResp(videoResp, nil, nil)
+	resp.Count = &count
+	return resp, nil
 }
 
 // HotVideo implements the VideoHandlerImpl interface.

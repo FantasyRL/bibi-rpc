@@ -16,7 +16,7 @@ const (
 	ChatTableName        = "message"
 	CommentTableName     = "comment"
 	CommentLikeTableName = "comment_like"
-	FavoriteTableName    = "like"
+	LikeTableName        = "like"
 	FollowTableName      = "follow"
 	VideoTableName       = "video"
 
@@ -49,4 +49,27 @@ const (
 	// follow type
 	FollowAction   = 1
 	UnFollowAction = 0
+
+	//redis
+	VideoLikeSuffix     = ":video_like"
+	CommentLikeSuffix   = ":comment_like"
+	FollowerCountSuffix = ":follower_counts"
+	FriendCountSuffix   = ":friend_counts"
+	CommentSuffix       = ":comment"
+	FollowerSuffix      = ":follower"
+	ReceiveSuffix       = ":receive"
+
+	VideoExpTime   = time.Hour * 1 //到期自动移除k-v
+	LikeExpTime    = time.Minute * 10
+	CommentExpTime = time.Minute * 10
+	FollowExpTime  = time.Minute
+	MessageExpTime = time.Hour * 24 * 7
+
+	VideoLikeZset         = "video_likes"
+	CommentLikeZset       = "comment_likes"
+	VideoCommentCountZset = "video_comment_counts"
+	VideoCommentZset      = "video_comments"
+	FollowerCountZset     = "follower_counts"
+	FollowingCountZset    = "following_counts"
+	FriendCountZset       = "friend_counts"
 )

@@ -26,8 +26,8 @@ func CreateVideo(ctx context.Context, video *Video) (*Video, error) {
 	return video, nil
 }
 
-func GetVideoCountByID(uid int64) (count int64, err error) {
-	if err = DB.Model(Video{}).Where("uid = ?", uid).Count(&count).Error; err != nil {
+func GetVideoCountByID(ctx context.Context, uid int64) (count int64, err error) {
+	if err = DB.WithContext(ctx).Where("uid = ?", uid).Count(&count).Error; err != nil {
 		return 114514, err
 	}
 	return
@@ -37,7 +37,7 @@ func ListVideosByID(ctx context.Context, pageNum int, uid int64) (*[]Video, int6
 	videos := new([]Video)
 	var count int64 = 0
 	//按创建时间降序
-	if err := DB.Model(&Video{}).Where("uid = ?", uid).Count(&count).Order("created_at DESC").
+	if err := DB.WithContext(ctx).Where("uid = ?", uid).Count(&count).Order("created_at DESC").
 		Limit(constants.PageSize).Offset((pageNum - 1) * constants.PageSize).Find(videos).
 		Error; err != nil {
 		return nil, 114514, err
@@ -48,7 +48,7 @@ func ListVideosByID(ctx context.Context, pageNum int, uid int64) (*[]Video, int6
 func SearchVideo(ctx context.Context, pageNum int, param string) (*[]Video, int64, error) {
 	videos := new([]Video)
 	var count int64 = 0
-	if err := DB.Model(&Video{}).
+	if err := DB.WithContext(ctx).
 		Where("title LIKE ? ", "%"+param+"%").
 		Count(&count).Limit(constants.PageSize).Offset((pageNum - 1) * constants.PageSize).Find(&videos).
 		Error; err != nil {
@@ -57,9 +57,9 @@ func SearchVideo(ctx context.Context, pageNum int, param string) (*[]Video, int6
 	return videos, count, nil
 }
 
-func CheckVideoExistById(videoId int64) error {
+func CheckVideoExistById(ctx context.Context, videoId int64) error {
 	video := new(Video)
-	if err := DB.Model(Video{}).Where("id = ?", videoId).Find(video).Error; err != nil {
+	if err := DB.WithContext(ctx).Where("id = ?", videoId).Find(video).Error; err != nil {
 		return err
 	}
 	if video != (&Video{}) {
@@ -68,10 +68,10 @@ func CheckVideoExistById(videoId int64) error {
 	return nil
 }
 
-func GetVideoByIdList(videoIdList []int64) ([]Video, error) {
+func GetVideoByIdList(ctx context.Context, videoIdList []int64) ([]Video, error) {
 	videos := new([]Video)
 	//.Order("created_at DESC")没必要
-	if err := DB.Model(Video{}).Where("id IN ?", videoIdList).Find(videos).Error; err != nil {
+	if err := DB.WithContext(ctx).Where("id IN ?", videoIdList).Find(videos).Error; err != nil {
 		return nil, err
 	}
 	return *videos, nil

@@ -12,7 +12,7 @@ import (
 )
 
 func (s *UserService) Switch2faType(req *user.Switch2FARequest) error {
-	userResp, err := db.QueryUserByID(&db.User{ID: req.UserId})
+	userResp, err := db.QueryUserByID(s.ctx, &db.User{ID: req.UserId})
 	if err != nil {
 		return err
 	}
