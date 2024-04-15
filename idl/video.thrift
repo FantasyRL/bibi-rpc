@@ -1,11 +1,7 @@
 namespace go video
 
 include "user.thrift"
-
-struct BaseResp {
-    1: i64 code,
-    2: string msg,
-}
+include"base.thrift"
 
 struct Video{
     1:i64 id,
@@ -28,7 +24,7 @@ struct PutVideoRequest{
 }
 
 struct PutVideoResponse{
-    1:BaseResp base,
+    1:base.BaseResp base,
 }
 
 struct ListUserVideoRequest{
@@ -37,7 +33,7 @@ struct ListUserVideoRequest{
 }
 
 struct ListUserVideoResponse{
-    1:BaseResp base,
+    1:base.BaseResp base,
     2:optional i64 count,
     3:optional list<Video> video_list,
 }
@@ -48,7 +44,7 @@ struct SearchVideoRequest{
 }
 
 struct SearchVideoResponse{
-    1:BaseResp base,
+    1:base.BaseResp base,
     2:optional i64 count,
     3:optional list<Video> video_list,
 }
@@ -58,7 +54,7 @@ struct HotVideoRequest{
 }
 
 struct HotVideoResponse{
-    1:BaseResp base,
+    1:base.BaseResp base,
     2:optional list<Video> video_list,
 }
 

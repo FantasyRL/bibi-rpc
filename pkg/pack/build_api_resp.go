@@ -5,6 +5,7 @@ import (
 	base2 "bibi/api/biz/model/base"
 	"bibi/kitex_gen/base"
 	"bibi/kitex_gen/user"
+	"bibi/kitex_gen/video"
 	"bibi/pkg/errno"
 	"errors"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -68,4 +69,27 @@ func ToUserResp(_user interface{}) *api.User {
 		Email:  p.Email,
 		Avatar: p.Avatar,
 	}
+}
+
+func ConvertToAPIVideo(kitexVideo *video.Video) *api.Video {
+	return &api.Video{
+		ID:           kitexVideo.Id,
+		Title:        kitexVideo.Title,
+		Author:       ConvertToAPIUser(kitexVideo.Author),
+		UID:          kitexVideo.Uid,
+		PlayURL:      kitexVideo.PlayUrl,
+		CoverURL:     kitexVideo.CoverUrl,
+		LikeCount:    kitexVideo.LikeCount,
+		CommentCount: kitexVideo.CommentCount,
+		IsLike:       kitexVideo.IsLike,
+		PublishTime:  kitexVideo.PublishTime,
+	}
+}
+
+func ConvertToAPIVideos(kitexVideos []*video.Video) []*api.Video {
+	videosResp := make([]*api.Video, len(kitexVideos))
+	for i, v := range kitexVideos {
+		videosResp[i] = ConvertToAPIVideo(v)
+	}
+	return videosResp
 }

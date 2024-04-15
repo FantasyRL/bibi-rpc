@@ -58,9 +58,9 @@ func UserVideoList(ctx context.Context, req *video.ListUserVideoRequest) (*video
 
 }
 
-func VideoUpload(ctx context.Context, req *video.PutVideoReq) (*video.PutVideoResp, error) {
+func VideoSearch(ctx context.Context, req *video.SearchVideoRequest) (*video.SearchVideoResponse, error) {
 	//rpc client
-	resp, err := videoClient.PutVideo(ctx, req)
+	resp, err := videoClient.SearchVideo(ctx, req)
 	//按照逻辑来讲这个err仅用于client出错
 	if err != nil {
 		return nil, err
@@ -69,9 +69,9 @@ func VideoUpload(ctx context.Context, req *video.PutVideoReq) (*video.PutVideoRe
 
 }
 
-func VideoUpload(ctx context.Context, req *video.PutVideoReq) (*video.PutVideoResp, error) {
+func VideoRank(ctx context.Context, req *video.HotVideoRequest) (*video.HotVideoResponse, error) {
 	//rpc client
-	resp, err := videoClient.PutVideo(ctx, req)
+	resp, err := videoClient.HotVideo(ctx, req)
 	//按照逻辑来讲这个err仅用于client出错
 	if err != nil {
 		return nil, err

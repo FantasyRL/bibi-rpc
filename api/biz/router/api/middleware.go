@@ -87,8 +87,9 @@ func _hotvideoMw() []app.HandlerFunc {
 }
 
 func _listvideoMw() []app.HandlerFunc {
-	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
 }
 
 func _searchvideoMw() []app.HandlerFunc {
@@ -97,6 +98,47 @@ func _searchvideoMw() []app.HandlerFunc {
 }
 
 func _putvideoMw() []app.HandlerFunc {
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
+}
+
+func _interactionMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _commentMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _commentcreateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _commentdeleteMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _commentlistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _likeMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _likeactionMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _likelistMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }

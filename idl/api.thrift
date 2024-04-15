@@ -149,3 +149,71 @@ service VideoHandler{
     SearchVideoResponse SearchVideo(1:SearchVideoRequest req)(api.post="/bibi/video/search"),
     HotVideoResponse HotVideo(1:HotVideoRequest req)(api.get="/bibi/video/hot"),
 }
+
+//interaction
+struct Comment {
+    1: i64 id,
+    2: i64 video_id,
+    3: optional i64 parent_id,
+    4: User user,
+    5: string content,
+    6: string publish_time,
+}
+
+struct LikeActionRequest{
+    1:optional i64 video_id,
+    2:optional i64 comment_id,
+    3:i64 action_type,
+}
+
+struct LikeActionResponse{
+    1:base.BaseResp base,
+}
+
+struct LikeListRequest{
+    1:i64 page_num,
+}
+
+struct LikeListResponse{
+    1:base.BaseResp base,
+    2:optional i64 video_count,
+    3:optional list<Video> video_list,
+}
+
+struct CommentCreateRequest{
+    1:required i64 video_id,
+    2:optional i64 parent_id,
+    3:string content,
+}
+
+struct CommentCreateResponse{
+    1:base.BaseResp base,
+}
+
+struct CommentDeleteRequest{
+    1:i64 video_id,
+    2:i64 comment_id,
+}
+
+struct CommentDeleteResponse{
+    1:base.BaseResp base,
+}
+
+struct CommentListRequest{
+    1:i64 video_id,
+    2:i64 page_num,
+}
+
+struct CommentListResponse{
+    1:base.BaseResp base,
+    2:optional i64 comment_count,
+    3:optional list<Comment> comment_list,
+}
+
+service InteractionHandler{
+    LikeActionResponse LikeAction(1:LikeActionRequest req)(api.post="/bibi/interaction/like/action"),
+    LikeListResponse LikeList(1:LikeListRequest req)(api.get="/bibi/interaction/like/list"),
+    CommentCreateResponse CommentCreate(1:CommentCreateRequest req)(api.post="/bibi/interaction/comment/create"),
+    CommentDeleteResponse CommentDelete(1:CommentDeleteRequest req)(api.post="/bibi/interaction/comment/delete"),
+    CommentListResponse CommentList(1:CommentListRequest req)(api.post="/bibi/interaction/comment/list"),
+}

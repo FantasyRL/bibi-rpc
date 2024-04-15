@@ -116,3 +116,15 @@ func (s *UserHandlerImpl) Switch2FA(ctx context.Context, req *user.Switch2FARequ
 	}
 	return resp, nil
 }
+
+// GetMember implements the UserHandlerImpl interface.
+func (s *UserHandlerImpl) GetMember(ctx context.Context, req *user.GetAuthorRequest) (resp *user.GetAuthorResponse, err error) {
+	// TODO: Your code here...
+	return
+}
+
+// GetAuthor implements the UserHandlerImpl interface.
+func (s *UserHandlerImpl) GetAuthor(ctx context.Context, req *user.GetAuthorRequest) (resp *user.GetAuthorResponse, err error) {
+	// TODO: Your code here...
+	return
+}
