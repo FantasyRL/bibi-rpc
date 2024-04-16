@@ -14,9 +14,9 @@ struct User {
 }
 
 struct RegisterRequest {
-    1: string username,
-    2: string email,
-    3: string password,
+    1: required string username,
+    2: required string email,
+    3: required string password,
 }
 
 struct RegisterResponse {
@@ -33,7 +33,7 @@ struct RegisterResponse {
 //}
 
 struct Switch2FARequest{
-    1:i64 action_type,
+    1:required i64 action_type,
     2:optional string totp,
 }
 
@@ -42,8 +42,8 @@ struct Switch2FAResponse{
 }
 
 struct LoginRequest {
-    1: string username,
-    2: string password,
+    1: required string username,
+    2: required string password,
     3: optional string otp,
 }
 
@@ -55,7 +55,7 @@ struct LoginResponse {
 }
 
 struct InfoRequest {
-    1:i64 user_id,
+    1:required i64 user_id,
 }
 
 struct GetAccessTokenRequest{
@@ -74,7 +74,7 @@ struct InfoResponse {
 }
 
 struct AvatarRequest{
-    1:binary avatar_file,
+    1:required binary avatar_file,
 }
 struct AvatarResponse{
     1: base.BaseResp base,
@@ -115,7 +115,7 @@ struct PutVideoResponse{
 }
 
 struct ListUserVideoRequest{
-    1:i64 page_num,
+    1:required i64 page_num,
 }
 
 struct ListUserVideoResponse{
@@ -125,8 +125,8 @@ struct ListUserVideoResponse{
 }
 
 struct SearchVideoRequest{
-    1:string param,
-    2:i64 page_num,
+    1:required string param,
+    2:required i64 page_num,
 }
 
 struct SearchVideoResponse{
@@ -163,7 +163,7 @@ struct Comment {
 struct LikeActionRequest{
     1:optional i64 video_id,
     2:optional i64 comment_id,
-    3:i64 action_type,
+    3:required i64 action_type,
 }
 
 struct LikeActionResponse{
@@ -171,7 +171,7 @@ struct LikeActionResponse{
 }
 
 struct LikeListRequest{
-    1:i64 page_num,
+    1:required i64 page_num,
 }
 
 struct LikeListResponse{
@@ -183,7 +183,7 @@ struct LikeListResponse{
 struct CommentCreateRequest{
     1:required i64 video_id,
     2:optional i64 parent_id,
-    3:string content,
+    3:required string content,
 }
 
 struct CommentCreateResponse{
@@ -191,8 +191,8 @@ struct CommentCreateResponse{
 }
 
 struct CommentDeleteRequest{
-    1:i64 video_id,
-    2:i64 comment_id,
+    1:required i64 video_id,
+    2:required i64 comment_id,
 }
 
 struct CommentDeleteResponse{
@@ -200,8 +200,8 @@ struct CommentDeleteResponse{
 }
 
 struct CommentListRequest{
-    1:i64 video_id,
-    2:i64 page_num,
+    1:required i64 video_id,
+    2:required i64 page_num,
 }
 
 struct CommentListResponse{

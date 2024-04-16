@@ -1,0 +1,198 @@
+bibi
+├─Dockerfile
+├─README.md
+├─docker-compose.yml
+├─go.mod
+├─go.sum
+├─kitex_update.sh
+├─script
+|   └bootstrap.sh
+├─rpc
+|  ├─video
+|  |   ├─build.sh
+|  |   ├─handler.go
+|  |   ├─kitex_info.yaml
+|  |   ├─main.go
+|  |   ├─service
+|  |   |    ├─get_like_video.go
+|  |   |    ├─hot_video.go
+|  |   |    ├─list_video.go
+|  |   |    ├─search_video.go
+|  |   |    ├─service.go
+|  |   |    └upload_video.go
+|  |   ├─script
+|  |   |   └bootstrap.sh
+|  |   ├─rpc
+|  |   |  ├─interaction.go
+|  |   |  └user.go
+|  |   ├─dal
+|  |   |  ├─init.go
+|  |   |  ├─db
+|  |   |  | ├─db.go
+|  |   |  | └init.go
+|  |   |  ├─cache
+|  |   |  |   └init.go
+|  ├─user
+|  |  ├─build.sh
+|  |  ├─handler.go
+|  |  ├─kitex_info.yaml
+|  |  ├─main.go
+|  |  ├─service
+|  |  |    ├─2fa.go
+|  |  |    ├─avatar.go
+|  |  |    ├─basic.go
+|  |  |    ├─get_user.go
+|  |  |    └service.go
+|  |  ├─script
+|  |  |   └bootstrap.sh
+|  |  ├─output
+|  |  |   ├─bootstrap.sh
+|  |  |   ├─log
+|  |  |   |  ├─rpc
+|  |  |   |  ├─app
+|  |  |   ├─bin
+|  |  |   |  └user
+|  |  ├─dal
+|  |  |  ├─init.go
+|  |  |  ├─db
+|  |  |  | ├─db.go
+|  |  |  | └init.go
+|  |  |  ├─cache
+|  |  |  |   └init.go
+|  ├─interaction
+|  |      ├─build.sh
+|  |      ├─handler.go
+|  |      ├─kitex_info.yaml
+|  |      ├─main.go
+|  |      ├─service
+|  |      |    ├─comment_action.go
+|  |      |    ├─comment_list.go
+|  |      |    ├─like_action.go
+|  |      |    ├─like_count.go
+|  |      |    ├─like_list.go
+|  |      |    └service.go
+|  |      ├─script
+|  |      |   └bootstrap.sh
+|  |      ├─dal
+|  |      |  ├─init.go
+|  |      |  ├─db
+|  |      |  | ├─comment.go
+|  |      |  | ├─comment_like.go
+|  |      |  | ├─comment_msgp.go
+|  |      |  | ├─init.go
+|  |      |  | └like.go
+|  |      |  ├─cache
+|  |      |  |   ├─comment.go
+|  |      |  |   ├─init.go
+|  |      |  |   └like.go
+├─pkg
+|  ├─utils
+|  |   ├─utils.go
+|  |   ├─sender
+|  |   |   └send.go
+|  |   ├─pwd
+|  |   |  └pwd.go
+|  |   ├─otp2fa
+|  |   |   └totp.go
+|  |   ├─oss
+|  |   |  └oss.go
+|  |   ├─eslogrus
+|  |   |    └eslogrus.go
+|  ├─pack
+|  |  ├─build_api_resp.go
+|  |  └pack.go
+|  ├─errno
+|  |   └errno.go
+|  ├─constants
+|  |     └constants.go
+├─kitex_gen
+|     ├─video
+|     |   ├─k-consts.go
+|     |   ├─k-video.go
+|     |   ├─video.go
+|     |   ├─videohandler
+|     |   |      ├─client.go
+|     |   |      ├─invoker.go
+|     |   |      ├─server.go
+|     |   |      └videohandler.go
+|     ├─user
+|     |  ├─k-consts.go
+|     |  ├─k-user.go
+|     |  ├─user.go
+|     |  ├─userhandler
+|     |  |      ├─client.go
+|     |  |      ├─invoker.go
+|     |  |      ├─server.go
+|     |  |      └userhandler.go
+|     ├─interaction
+|     |      ├─interaction.go
+|     |      ├─k-consts.go
+|     |      ├─k-interaction.go
+|     |      ├─interactionhandler
+|     |      |         ├─client.go
+|     |      |         ├─interactionhandler.go
+|     |      |         ├─invoker.go
+|     |      |         └server.go
+|     ├─base
+|     |  ├─base.go
+|     |  ├─k-base.go
+|     |  └k-consts.go
+├─idl
+|  ├─api.thrift
+|  ├─base.thrift
+|  ├─interaction.thrift
+|  ├─user.thrift
+|  └video.thrift
+├─config
+|   ├─config-example.yaml
+|   ├─config.go
+|   ├─config.yaml
+|   ├─types.go
+|   ├─sql
+|   |  └init.sql
+|   ├─redis
+|   |   └redis.conf
+|   ├─kibana
+|   ├─elasticsearch
+├─api
+|  ├─.hz
+|  ├─build.sh
+|  ├─hz_update.sh
+|  ├─main.go
+|  ├─router.go
+|  ├─router_gen.go
+|  ├─script
+|  |   └bootstrap.sh
+|  ├─output
+|  |   ├─bootstrap.sh
+|  |   ├─bin
+|  |   |  └hertz_service
+|  ├─docs
+|  |  ├─docs.go
+|  |  ├─swagger.json
+|  |  └swagger.yaml
+|  ├─biz
+|  |  ├─rpc
+|  |  |  ├─init.go
+|  |  |  ├─interaction.go
+|  |  |  ├─user.go
+|  |  |  └video.go
+|  |  ├─router
+|  |  |   ├─register.go
+|  |  |   ├─api
+|  |  |   |  ├─api.go
+|  |  |   |  └middleware.go
+|  |  ├─mw
+|  |  | ├─jwt
+|  |  | |  └jwt.go
+|  |  ├─model
+|  |  |   ├─base
+|  |  |   |  └base.go
+|  |  |   ├─api
+|  |  |   |  └api.go
+|  |  ├─handler
+|  |  |    ├─ping.go
+|  |  |    ├─api
+|  |  |    |  ├─interaction_handler.go
+|  |  |    |  ├─user_handler.go
+|  |  |    |  └video_handler.go

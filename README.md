@@ -53,7 +53,16 @@ docker run -d --net=host bibi-demo go run bibi # 运行程序
 
 实现了双token:创建了两个hertz_jwt中间件，一个负责access，一个负责refresh，并添加一个用于get access by refresh的接口
 
-继续重构中...
+### 0416
+
+在video服务接入es,并使用钩子自动上传([参考仓库链接](https://github.com/CocaineCong/eslogrus))
+
+同时video服务展示了rpc架构下并发远程调用其他服务
+
+目录树生成:
+```bash
+treer -e tree.txt -i "/.idea|.git|data/"
+```
 
 ## Todo...
 
@@ -63,7 +72,7 @@ es管理日志
 
 将会改进comment缓存的逻辑
 
-将会进行重构rpc以改进混沌的handler层(doing)
+将会进行重构rpc以改进混沌的handler层(done)
 
 将会更加贴合接口文档需求(doing)
 

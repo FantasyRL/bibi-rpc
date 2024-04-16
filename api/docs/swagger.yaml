@@ -18,19 +18,138 @@ paths:
       summary: get_access-token
   /bibi/interaction/comment/create:
     post:
+      consumes:
+      - json/form
+      description: comment video
+      parameters:
+      - description: 视频id
+        in: query
+        name: video_id
+        required: true
+        type: integer
+      - description: 父评论id
+        in: query
+        name: parent_id
+        type: integer
+      - description: 正文
+        in: query
+        name: content
+        required: true
+        type: string
+      - description: access-token
+        in: header
+        name: access-token
+        type: string
+      - description: refresh-token
+        in: header
+        name: refresh-token
+        type: string
+      produces:
+      - application/json
       responses: {}
+      summary: comment_create
   /bibi/interaction/comment/delete:
     post:
+      consumes:
+      - json/form
+      description: delete your comment
+      parameters:
+      - description: 视频id
+        in: query
+        name: video_id
+        required: true
+        type: integer
+      - description: 评论id
+        in: query
+        name: comment_id
+        required: true
+        type: integer
+      - description: access-token
+        in: header
+        name: access-token
+        type: string
+      - description: refresh-token
+        in: header
+        name: refresh-token
+        type: string
+      produces:
+      - application/json
       responses: {}
+      summary: comment_delete
   /bibi/interaction/comment/list:
     post:
+      consumes:
+      - json/form
+      description: show video's comments
+      parameters:
+      - description: 视频id
+        in: query
+        name: video_id
+        required: true
+        type: integer
+      - description: 页码
+        in: query
+        name: page_num
+        required: true
+        type: string
+      produces:
+      - application/json
       responses: {}
+      summary: comment_list
   /bibi/interaction/like/action:
     post:
+      consumes:
+      - json/form
+      description: like or dislike video
+      parameters:
+      - description: 视频id
+        in: query
+        name: video_id
+        type: integer
+      - description: 评论id
+        in: query
+        name: comment_id
+        type: integer
+      - description: 点赞:0;取消点赞:1
+        in: query
+        name: action_type
+        required: true
+        type: integer
+      - description: access-token
+        in: header
+        name: access-token
+        type: string
+      - description: refresh-token
+        in: header
+        name: refresh-token
+        type: string
+      produces:
+      - application/json
       responses: {}
+      summary: like_action
   /bibi/interaction/like/list:
     get:
+      consumes:
+      - json/form
+      description: show the list of your liked videos
+      parameters:
+      - description: 页码
+        in: query
+        name: page_num
+        required: true
+        type: integer
+      - description: access-token
+        in: header
+        name: access-token
+        type: string
+      - description: refresh-token
+        in: header
+        name: refresh-token
+        type: string
+      produces:
+      - application/json
       responses: {}
+      summary: like_list
   /bibi/user/avatar/upload:
     put:
       consumes:

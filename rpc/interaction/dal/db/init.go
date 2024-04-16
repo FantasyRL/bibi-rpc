@@ -48,10 +48,10 @@ func Init() {
 	} else {
 		klog.Info("db_comment connect access")
 	}
-	sqlDB, err = DBCommentLike.DB()
-	sqlDB.SetMaxIdleConns(constants.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(constants.MaxConnections)
-	sqlDB.SetConnMaxLifetime(constants.ConnMaxLifetime)
+	//sqlDB, err = DBCommentLike.DB()
+	//sqlDB.SetMaxIdleConns(constants.MaxIdleConns)
+	//sqlDB.SetMaxOpenConns(constants.MaxConnections)
+	//sqlDB.SetConnMaxLifetime(constants.ConnMaxLifetime)
 	DBComment = DBComment.Table(constants.CommentTableName)
 
 	DBCommentLike, err = gorm.Open(mysql.Open(utils.InitMysqlDSN()),
@@ -66,9 +66,9 @@ func Init() {
 	} else {
 		klog.Info("db_comment_like connect access")
 	}
-	sqlDB, err = DBCommentLike.DB()
-	sqlDB.SetMaxIdleConns(constants.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(constants.MaxConnections)
-	sqlDB.SetConnMaxLifetime(constants.ConnMaxLifetime)
+	//sqlDB, err = DBCommentLike.DB()
+	//sqlDB.SetMaxIdleConns(constants.MaxIdleConns)
+	//sqlDB.SetMaxOpenConns(constants.MaxConnections)
+	//sqlDB.SetConnMaxLifetime(constants.ConnMaxLifetime)
 	DBCommentLike = DBCommentLike.Table(constants.CommentLikeTableName)
 }
