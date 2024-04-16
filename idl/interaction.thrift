@@ -78,6 +78,7 @@ struct GetLikesCountByVideoIdListResponse{
 
 struct GetIsLikeByVideoIdListRequest{
     1:list<i64> video_id,
+    2:i64 user_id,
 }
 
 struct GetIsLikeByVideoIdListResponse{

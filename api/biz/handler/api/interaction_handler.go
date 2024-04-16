@@ -3,6 +3,10 @@
 package api
 
 import (
+	"bibi/api/biz/rpc"
+	"bibi/kitex_gen/interaction"
+	"bibi/pkg/errno"
+	"bibi/pkg/pack"
 	"context"
 
 	api "bibi/api/biz/model/api"
@@ -11,6 +15,15 @@ import (
 )
 
 // LikeAction .
+// @Summary like_action
+// @Description like or dislike video
+// @Accept json/form
+// @Produce json
+// @Param video_id query int false "视频id"
+// @Param comment_id query int false "评论id"
+// @Param action_type query int true "点赞:0;取消点赞:1"
+// @Param access-token header string false "access-token"
+// @Param refresh-token header string false "refresh-token"
 // @router /bibi/interaction/like/action [POST]
 func LikeAction(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -23,10 +36,26 @@ func LikeAction(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.LikeActionResponse)
 
+	v, _ := c.Get("current_user_id")
+	id := v.(int64)
+	rpcResp, err := rpc.LikeAction(ctx, &interaction.LikeActionRequest{
+		VideoId:    req.VideoID,
+		CommentId:  req.CommentID,
+		ActionType: req.ActionType,
+		UserId:     id,
+	})
+	resp.Base = pack.ConvertToAPIBaseResp(rpcResp.Base)
 	c.JSON(consts.StatusOK, resp)
 }
 
 // LikeList .
+// @Summary like_list
+// @Description show the list of your liked videos
+// @Accept json/form
+// @Produce json
+// @Param page_num query int64 true "页码"
+// @Param access-token header string false "access-token"
+// @Param refresh-token header string false "refresh-token"
 // @router /bibi/interaction/like/list [GET]
 func LikeList(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -39,10 +68,34 @@ func LikeList(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.LikeListResponse)
 
+	v, _ := c.Get("current_user_id")
+	id := v.(int64)
+	rpcResp, err := rpc.LikedVideoList(ctx, &interaction.LikeListRequest{
+		PageNum: req.PageNum,
+		UserId:  id,
+	})
+	resp.Base = pack.ConvertToAPIBaseResp(rpcResp.Base)
+	if rpcResp.Base.Code != errno.SuccessCode {
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+	resp.VideoCount = rpcResp.VideoCount
+	resp.VideoList = pack.ConvertToAPIVideos(rpcResp.VideoList)
 	c.JSON(consts.StatusOK, resp)
 }
 
+//todo:commentLikeCount
+
 // CommentCreate .
+// @Summary comment_create
+// @Description comment video
+// @Accept json/form
+// @Produce json
+// @Param video_id query int true "视频id"
+// @Param parent_id query int false "父评论id"
+// @Param content query string true "正文"
+// @Param access-token header string false "access-token"
+// @Param refresh-token header string false "refresh-token"
 // @router /bibi/interaction/comment/create [POST]
 func CommentCreate(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -55,10 +108,27 @@ func CommentCreate(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.CommentCreateResponse)
 
+	v, _ := c.Get("current_user_id")
+	id := v.(int64)
+	rpcResp, err := rpc.CommentCreate(ctx, &interaction.CommentCreateRequest{
+		VideoId:  req.VideoID,
+		ParentId: req.ParentID,
+		Content:  req.Content,
+		UserId:   id,
+	})
+	resp.Base = pack.ConvertToAPIBaseResp(rpcResp.Base)
 	c.JSON(consts.StatusOK, resp)
 }
 
 // CommentDelete .
+// @Summary comment_delete
+// @Description delete your comment
+// @Accept json/form
+// @Produce json
+// @Param video_id query int true "视频id"
+// @Param comment_id query int true "评论id"
+// @Param access-token header string false "access-token"
+// @Param refresh-token header string false "refresh-token"
 // @router /bibi/interaction/comment/delete [POST]
 func CommentDelete(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -71,10 +141,24 @@ func CommentDelete(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.CommentDeleteResponse)
 
+	v, _ := c.Get("current_user_id")
+	id := v.(int64)
+	rpcResp, err := rpc.CommentDelete(ctx, &interaction.CommentDeleteRequest{
+		VideoId:   req.VideoID,
+		CommentId: req.CommentID,
+		UserId:    id,
+	})
+	resp.Base = pack.ConvertToAPIBaseResp(rpcResp.Base)
 	c.JSON(consts.StatusOK, resp)
 }
 
 // CommentList .
+// @Summary comment_list
+// @Description show video's comments
+// @Accept json/form
+// @Produce json
+// @Param video_id query int true "视频id"
+// @Param page_num query string true "页码"
 // @router /bibi/interaction/comment/list [POST]
 func CommentList(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -87,5 +171,16 @@ func CommentList(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.CommentListResponse)
 
+	rpcResp, err := rpc.CommentList(ctx, &interaction.CommentListRequest{
+		VideoId: req.VideoID,
+		PageNum: req.PageNum,
+	})
+	resp.Base = pack.ConvertToAPIBaseResp(rpcResp.Base)
+	if rpcResp.Base.Code != errno.SuccessCode {
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+	resp.CommentCount = rpcResp.CommentCount
+	resp.CommentList = pack.ConvertToAPIComments(rpcResp.CommentList)
 	c.JSON(consts.StatusOK, resp)
 }

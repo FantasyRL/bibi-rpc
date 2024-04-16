@@ -4,6 +4,7 @@ import (
 	"bibi/api/biz/model/api"
 	base2 "bibi/api/biz/model/base"
 	"bibi/kitex_gen/base"
+	"bibi/kitex_gen/interaction"
 	"bibi/kitex_gen/user"
 	"bibi/kitex_gen/video"
 	"bibi/pkg/errno"
@@ -92,4 +93,23 @@ func ConvertToAPIVideos(kitexVideos []*video.Video) []*api.Video {
 		videosResp[i] = ConvertToAPIVideo(v)
 	}
 	return videosResp
+}
+
+func ConvertToAPIComment(kitexComment *interaction.Comment) *api.Comment {
+	return &api.Comment{
+		ID:          kitexComment.Id,
+		VideoID:     kitexComment.VideoId,
+		ParentID:    kitexComment.ParentId,
+		User:        ConvertToAPIUser(kitexComment.User),
+		Content:     kitexComment.Content,
+		PublishTime: kitexComment.PublishTime,
+	}
+}
+
+func ConvertToAPIComments(kitexComments []*interaction.Comment) []*api.Comment {
+	commentsResp := make([]*api.Comment, len(kitexComments))
+	for i, v := range kitexComments {
+		commentsResp[i] = ConvertToAPIComment(v)
+	}
+	return commentsResp
 }

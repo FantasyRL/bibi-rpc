@@ -36,6 +36,8 @@ const (
 )
 
 const (
+	ElasticSearchIndexName = "bibi"
+
 	// page
 	PageNum  = 1
 	PageSize = 10

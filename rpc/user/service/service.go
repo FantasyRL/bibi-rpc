@@ -38,3 +38,11 @@ func BuildUserResp(dbUser *db.User) *user.User {
 		Avatar: dbUser.Avatar,
 	}
 }
+
+func BuildUsersResp(dbUsers *[]db.User) []*user.User {
+	usersResp := make([]*user.User, len(*dbUsers))
+	for i, v := range *dbUsers {
+		usersResp[i] = BuildUserResp(&v)
+	}
+	return usersResp
+}

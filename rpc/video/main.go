@@ -5,21 +5,37 @@ import (
 	video "bibi/kitex_gen/video/videohandler"
 	"bibi/pkg/constants"
 	"bibi/pkg/utils"
+	"bibi/pkg/utils/eslogrus"
 	"bibi/rpc/video/dal"
 	"bibi/rpc/video/rpc"
+	"crypto/tls"
+	"fmt"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	"github.com/cloudwego/netpoll"
+	elastic "github.com/elastic/go-elasticsearch/v8"
+	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	etcd "github.com/kitex-contrib/registry-etcd"
+	"github.com/sirupsen/logrus"
+	"net"
+	"net/http"
+	"time"
 )
 
-var listenAddr string
+var (
+	listenAddr string
+	EsClient   *elastic.Client
+)
 
 func Init() {
 	config.Init(constants.VideoServiceName)
 	dal.Init()
+
+	InitEs()
+	klog.SetLevel(klog.LevelDebug)
+	klog.SetLogger(kitexlogrus.NewLogger(kitexlogrus.WithHook(EsHookLog())))
 
 	rpc.InitInteractionRPC()
 	rpc.InitUserRPC()
@@ -64,4 +80,33 @@ func main() {
 	if err != nil {
 		klog.Error(err.Error())
 	}
+}
+
+func EsHookLog() *eslogrus.ElasticHook {
+	hook, err := eslogrus.NewElasticHook(EsClient, config.ElasticSearch.Host, logrus.DebugLevel, constants.ElasticSearchIndexName)
+	if err != nil {
+		klog.Warn(err)
+	}
+
+	return hook
+}
+
+func InitEs() {
+	esConn := fmt.Sprintf("http://%s", config.ElasticSearch.Addr)
+	cfg := elastic.Config{
+		Addresses: []string{esConn},
+		Transport: &http.Transport{
+			MaxIdleConnsPerHost:   10,
+			ResponseHeaderTimeout: time.Second,
+			DialContext:           (&net.Dialer{Timeout: time.Second}).DialContext,
+			TLSClientConfig: &tls.Config{
+				MinVersion: tls.VersionTLS12,
+			},
+		},
+	}
+	client, err := elastic.NewClient(cfg)
+	if err != nil {
+		klog.Fatal(err)
+	}
+	EsClient = client
 }
