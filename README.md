@@ -15,12 +15,6 @@ make build-all
 
 使用：将docs/swagger.* 丢到apifox/postman，然后就能用了(**Header:Authorization格式**:Bearer {token})
 
-本项目的构建历程：抄项目架构、抄结构体、看demo遇到不会的学一下然后继续抄...
-
-真是一场酣畅淋漓的ctrl+c.jpg
-
-对于结构体加密存储redis使用了msgp(就一个地方偷懒直接用了JSON) 
-
 (commit 都是瞎写的不要在意...)
 
 ## 完成情况：
@@ -63,16 +57,16 @@ treer -e tree.txt -i "/.idea|.git|data/"
 
 ## Todo...
 
-在idl中添加optional以优化response(done)
+~~在idl中添加optional以优化response(done)~~
 
-es管理日志
+~~es管理日志(done)~~
 
-将会改进comment缓存的逻辑
+将会改进comment缓存的逻辑(todo)
 
-将会进行重构rpc以改进混沌的handler层(done)
+~~将会进行重构rpc以改进混沌的handler层(done)~~
 
 将会更加贴合接口文档需求(doing)
 
-将会添加双token(done)
+~~将会添加双token(done)~~
 
-gormopentracing,Snowflake
+gormopentracing,Snowflake(todo)
