@@ -9,8 +9,8 @@ import (
 var (
 	rLike    *redis.Client
 	rComment *redis.Client
-	rFollow  *redis.Client
-	rMessage *redis.Client
+	//rFollow  *redis.Client
+	//rMessage *redis.Client
 )
 
 func Init() {

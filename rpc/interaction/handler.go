@@ -2,7 +2,6 @@ package main
 
 import (
 	interaction "bibi/kitex_gen/interaction"
-	"bibi/pkg/constants"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
 	"bibi/rpc/interaction/service"
@@ -44,16 +43,16 @@ func (s *InteractionHandlerImpl) LikeList(ctx context.Context, req *interaction.
 	count := int64(len(allLikeResp))
 	resp.VideoCount = &count
 
-	var likeResp []int64
-	if len(allLikeResp) <= int(req.PageNum-1)*constants.PageSize || int(req.PageNum-1)*constants.PageSize < 0 {
-		resp.Base = pack.BuildBaseResp(nil)
-		return resp, nil
-	} else {
-		fst := int(req.PageNum-1) * constants.PageSize
-		for i := fst; i < fst+constants.PageSize && i < len(allLikeResp); i++ {
-			likeResp = append(likeResp, allLikeResp[i])
-		}
-	}
+	//var likeResp []int64
+	//if len(allLikeResp) <= int(req.PageNum-1)*constants.PageSize || int(req.PageNum-1)*constants.PageSize < 0 {
+	//	resp.Base = pack.BuildBaseResp(nil)
+	//	return resp, nil
+	//} else {
+	//	fst := int(req.PageNum-1) * constants.PageSize
+	//	for i := fst; i < fst+constants.PageSize && i < len(allLikeResp); i++ {
+	//		likeResp = append(likeResp, allLikeResp[i])
+	//	}
+	//}
 	//todo:
 	//videosResp:=make([]*video.Video,constants.PageSize)
 	//GetLikeVideoList
