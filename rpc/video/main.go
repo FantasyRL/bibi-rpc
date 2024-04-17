@@ -61,7 +61,7 @@ func main() {
 	}
 
 	videoHandlerImpl := new(VideoHandlerImpl)
-	serviceAddr, err := netpoll.ResolveTCPAddr("tcp", listenAddr)
+	serviceAddr, _ := netpoll.ResolveTCPAddr("tcp", listenAddr)
 
 	svr := video.NewServer(videoHandlerImpl,
 		server.WithRegistry(r),

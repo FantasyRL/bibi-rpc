@@ -14,8 +14,7 @@ func (s *InteractionService) CommentCreate(req *interaction.CommentCreateRequest
 	var err error
 	var exist = false
 	comment := new(db.Comment)
-	commentModel := new(interaction.Comment)
-	commentModel = &interaction.Comment{
+	commentModel := &interaction.Comment{
 		VideoId:  req.VideoId,
 		ParentId: req.ParentId,
 		Content:  req.Content,

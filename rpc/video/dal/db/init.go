@@ -28,7 +28,7 @@ func Init() {
 		klog.Info("mysql connect access")
 	}
 
-	sqlDB, err := DB.DB()
+	sqlDB, _ := DB.DB()
 	sqlDB.SetMaxIdleConns(constants.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(constants.MaxConnections)
 	sqlDB.SetConnMaxLifetime(constants.ConnMaxLifetime)

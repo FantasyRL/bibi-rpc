@@ -30,7 +30,7 @@ func Init() {
 	} else {
 		klog.Info("db_like connect access")
 	}
-	sqlDB, err := DBLike.DB()
+	sqlDB, _ := DBLike.DB()
 	sqlDB.SetMaxIdleConns(constants.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(constants.MaxConnections)
 	sqlDB.SetConnMaxLifetime(constants.ConnMaxLifetime)
