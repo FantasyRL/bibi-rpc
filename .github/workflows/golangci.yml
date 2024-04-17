@@ -23,4 +23,29 @@ jobs:
           version: latest
           skip-build-cache: true
           skip-pkg-cache: true
-        run: golangci-lint run
+  tests-on-unix:
+    needs: golangci-lint # run after golangci-lint action to not produce duplicated errors
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        golang:
+          - '1.21'
+          - '1.22'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          # https://github.com/actions/setup-go#supported-version-syntax
+          # ex:
+          # - 1.18beta1 -> 1.18.0-beta.1
+          # - 1.18rc1 -> 1.18.0-rc.1
+          go-version: ${{ matrix.golang }}
+      - uses: actions/cache@v4
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ matrix.golang }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ matrix.golang }}-
+      - name: Run tests
+        run: make test
