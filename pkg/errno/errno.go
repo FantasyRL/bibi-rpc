@@ -2,7 +2,6 @@ package errno
 
 import (
 	"errors"
-	"fmt"
 )
 
 const (
@@ -76,7 +75,7 @@ type ErrNo struct {
 }
 
 func (e ErrNo) Error() string {
-	return fmt.Sprintf("%s", e.ErrorMsg)
+	return e.ErrorMsg
 }
 
 func NewErrNo(code int64, msg string) ErrNo {

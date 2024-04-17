@@ -1,0 +1,12 @@
+name: security check
+on:
+  push:
+    branches:
+      - not_main
+jobs:
+  golangci:
+    name: golangci
+    runs-on: ubuntu-22.04
+    steps:
+      - name: check code by golangci
+        run: golangci-lint run
