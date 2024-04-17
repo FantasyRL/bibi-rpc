@@ -99,7 +99,7 @@ jobs:
         uses: golangci/golangci-lint-action@v4.0.0
         with:
           version: latest
-          timeout: 10m
+          args: --timeout=10m
           # skip cache because of flaky behaviors
           skip-build-cache: true
           skip-pkg-cache: true
