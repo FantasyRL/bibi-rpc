@@ -43,7 +43,7 @@ func Login(ctx context.Context, userModel *User) (*User, error) {
 		return nil, errno.NotExistUserError
 	}
 
-	if pwd.CheckPassword(userResp.Password, userModel.Password) == false {
+	if !pwd.CheckPassword(userResp.Password, userModel.Password) {
 		return nil, errno.PwdError
 	}
 

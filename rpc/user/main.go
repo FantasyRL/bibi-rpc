@@ -45,6 +45,9 @@ func main() {
 
 	userHandlerImpl := new(UserHandlerImpl)
 	userCli, err := NewUserClient(listenAddr)
+	if err != nil {
+		log.Fatal(err)
+	}
 	serviceAddr, err := netpoll.ResolveTCPAddr("tcp", listenAddr)
 	if err != nil {
 		log.Fatal(err)

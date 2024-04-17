@@ -2,18 +2,15 @@
 
 **bibi-demo** is a small video website backend using hertz(hz-gen、jwt、websocket)+gorm(mysql)+redis+oss(aliyun)
 
-## deploy by docker(net=host)
+## deploy by host(net=host)
 
-(使用前请先关闭本机的mysql与redis服务)
-
-(由于重构为rpc架构，暂时不能快速启动)
+(由于非常的不会shell，所以build-all很没道理，暂时不会用docker启动rpc)
 `快速启动`
 ```bash
 #oss与email的配置需自行填写
-mv config/config-example.yaml config/config.yaml
-docker-compose up -d # 启动相关容器
-docker build -t bibi-demo . # 构建镜像
-docker run -d --net=host bibi-demo go run bibi # 运行程序
+make init
+make env-up
+make build-all
 ```
 
 使用：将docs/swagger.* 丢到apifox/postman，然后就能用了(**Header:Authorization格式**:Bearer {token})

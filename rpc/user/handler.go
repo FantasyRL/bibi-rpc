@@ -121,7 +121,7 @@ func (s *UserHandlerImpl) Switch2FA(ctx context.Context, req *user.Switch2FARequ
 func (s *UserHandlerImpl) GetAuthor(ctx context.Context, req *user.GetAuthorRequest) (resp *user.GetAuthorResponse, err error) {
 	resp = new(user.GetAuthorResponse)
 
-	userResp, err := service.NewUserService(ctx).GetUserByIdList(req.AuthorIdList)
+	userResp, _ := service.NewUserService(ctx).GetUserByIdList(req.AuthorIdList)
 	resp.AuthorList = service.BuildUsersResp(userResp)
 	return resp, nil
 }
