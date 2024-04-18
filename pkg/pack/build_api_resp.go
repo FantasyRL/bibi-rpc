@@ -1,8 +1,8 @@
 package pack
 
 import (
-	"bibi/api/biz/model/api"
-	base2 "bibi/api/biz/model/base"
+	"bibi/cmd/api/biz/model/api"
+	base2 "bibi/cmd/api/biz/model/base"
 	"bibi/kitex_gen/base"
 	"bibi/kitex_gen/interaction"
 	"bibi/kitex_gen/user"

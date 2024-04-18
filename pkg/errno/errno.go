@@ -1,9 +1,5 @@
 package errno
 
-import (
-	"errors"
-)
-
 const (
 	WebSocketSuccessCode       = 1000
 	WebSocketLogoutSuccessCode = iota + 1000
@@ -69,27 +65,6 @@ const (
 	WebSocketErrMsg                 = "Websocket error"
 )
 
-type ErrNo struct {
-	ErrorCode int64
-	ErrorMsg  string
-}
-
-func (e ErrNo) Error() string {
-	return e.ErrorMsg
-}
-
-func NewErrNo(code int64, msg string) ErrNo {
-	return ErrNo{
-		ErrorCode: code,
-		ErrorMsg:  msg,
-	}
-}
-
-func (e ErrNo) WithMessage(msg string) ErrNo { //出现不被定义的错误时
-	e.ErrorMsg = msg
-	return e
-}
-
 var (
 	Success                   = NewErrNo(SuccessCode, SuccessMsg)
 	ServiceError              = NewErrNo(ServiceErrCode, ServerErrMsg)
@@ -121,16 +96,3 @@ var (
 	WebSocketTargetOfflineError  = NewErrNo(WebSocketTargetOfflineErrCode, WebSocketTargetOfflineErrMsg)
 	WebSocketError               = NewErrNo(WebSocketErrCode, WebSocketErrMsg)
 )
-
-// ConvertErr convert error to ErrNo
-// in Default user ServiceErrCode
-func ConvertErr(err error) ErrNo {
-	errno := ErrNo{}
-	if errors.As(err, &errno) {
-		return errno
-	}
-
-	s := ServiceError
-	s.ErrorMsg = err.Error()
-	return s
-}
