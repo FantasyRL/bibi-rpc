@@ -1,8 +1,8 @@
 package sender
 
 import (
+	"bibi/cmd/user/dal/db"
 	"bibi/config"
-	"bibi/rpc/user/dal/db"
 	"bytes"
 	"encoding/base64"
 	"github.com/jordan-wright/email"

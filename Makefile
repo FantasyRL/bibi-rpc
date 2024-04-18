@@ -1,8 +1,8 @@
 DIR = $(shell pwd)#pwd:获得当前路径
 CONFIG_PATH = $(DIR)/config
 IDL_PATH = $(DIR)/idl
-API_PATH = $(DIR)/api
-RPC = $(DIR)/rpc
+API_PATH = $(DIR)/cmd/api
+RPC = $(DIR)/cmd
 OUTPUT_PATH = $(DIR)/output
 API=api
 SHELL=/bin/bash

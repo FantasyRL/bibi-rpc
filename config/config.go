@@ -61,3 +61,37 @@ func configMapping(serviceName string) {
 	}
 
 }
+
+func InitTest() {
+	Server = &server{
+		Version: "debug",
+		Name:    "bibi",
+		Secret:  []byte("exceed gear"),
+	}
+
+	Etcd = &etcd{
+		Addr: "127.0.0.1:2379",
+	}
+
+	Mysql = &mySQL{
+		Addr:     "127.0.0.1:3366",
+		User:     "root",
+		Password: "114514",
+		Database: "bibi_db",
+	}
+
+	Redis = &redis{
+		Addr: "127.0.0.1:6399",
+	}
+
+	RabbitMQ = &rabbitMQ{
+		Addr:     "127.0.0.1:5672",
+		User:     "guest",
+		Password: "guest",
+	}
+
+	ElasticSearch = &elasticsearch{
+		Addr: "127.0.0.1:9200",
+		Host: "127.0.0.1",
+	}
+}
