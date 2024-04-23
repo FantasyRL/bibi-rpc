@@ -2,11 +2,8 @@ package main
 
 import (
 	"bibi/cmd/video/dal/db"
-	"bibi/cmd/video/rpc"
 	"bibi/cmd/video/service"
 	"bibi/config"
-	"bibi/kitex_gen/interaction"
-	"bibi/kitex_gen/user"
 	video "bibi/kitex_gen/video"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
@@ -73,53 +70,13 @@ func (s *VideoHandlerImpl) PutVideo(ctx context.Context, req *video.PutVideoRequ
 // ListVideo implements the VideoHandlerImpl interface.
 func (s *VideoHandlerImpl) ListVideo(ctx context.Context, req *video.ListUserVideoRequest) (resp *video.ListUserVideoResponse, err error) {
 	resp = new(video.ListUserVideoResponse)
-	videoResp, count, err := service.NewVideoService(ctx).ListVideo(req)
+	videoResp, count, authorList, likeCountList, isLikeList, err := service.NewVideoService(ctx).ListVideo(req)
 	resp.Base = pack.BuildBaseResp(err)
 	if err != nil {
 		return resp, nil
 	}
-	videoIdList := make([]int64, len(*videoResp))
-	authorIdList := make([]int64, len(*videoResp))
-	//likeCountList := make([]int64, len(*videoResp))
-	//authorList := make([]*user.User, len(*videoResp))
-	var likeCountList []int64
-	var authorList []*user.User
-	for i, v := range *videoResp {
-		videoIdList[i] = v.ID
-		authorIdList[i] = v.Uid
-	}
-	var eg errgroup.Group
-	eg.Go(func() error {
-		rpcResp, err := rpc.GetLikeCountByIdList(ctx, &interaction.GetLikesCountByVideoIdListRequest{
-			VideoId: videoIdList,
-		})
-		if err != nil {
-			return err
-		}
-		likeCountList = rpcResp.LikeCountList
-		return nil
-	})
-	eg.Go(func() error {
-		rpcResp, err := rpc.UserGetAuthor(ctx, &user.GetAuthorRequest{
-			AuthorIdList: authorIdList,
-		})
-		if err != nil {
-			return err
-		}
-		authorList = rpcResp.AuthorList
-		return nil
-	})
-	//eg.Go(func() error {
-	//	rpcResp,err:=rpc.GetIsLikeByIdList(ctx,&interaction.GetIsLikeByVideoIdListRequest{
-	//		VideoId: videoIdList,
-	//		UserId:
-	//	})
-	//})
-	if err := eg.Wait(); err != nil {
-		resp.Base = pack.BuildBaseResp(err)
-		return resp, nil
-	}
-	resp.VideoList = service.BuildVideoListResp(videoResp, authorList, likeCountList, nil)
+
+	resp.VideoList = service.BuildVideoListResp(videoResp, authorList, likeCountList, isLikeList)
 	resp.Count = &count
 	return resp, nil
 }
@@ -127,54 +84,13 @@ func (s *VideoHandlerImpl) ListVideo(ctx context.Context, req *video.ListUserVid
 // SearchVideo implements the VideoHandlerImpl interface.
 func (s *VideoHandlerImpl) SearchVideo(ctx context.Context, req *video.SearchVideoRequest) (resp *video.SearchVideoResponse, err error) {
 	resp = new(video.SearchVideoResponse)
-	videoResp, count, err := service.NewVideoService(ctx).SearchVideo(req)
+	videoResp, count, authorList, likeCountList, isLikeList, err := service.NewVideoService(ctx).SearchVideo(req)
 	resp.Base = pack.BuildBaseResp(err)
 	if err != nil {
 		return resp, nil
 	}
 
-	videoIdList := make([]int64, len(*videoResp))
-	authorIdList := make([]int64, len(*videoResp))
-	//likeCountList := make([]int64, len(*videoResp))
-	//authorList := make([]*user.User, len(*videoResp))
-	var likeCountList []int64
-	var authorList []*user.User
-	for i, v := range *videoResp {
-		videoIdList[i] = v.ID
-		authorIdList[i] = v.Uid
-	}
-	var eg errgroup.Group
-	eg.Go(func() error {
-		rpcResp, err := rpc.GetLikeCountByIdList(ctx, &interaction.GetLikesCountByVideoIdListRequest{
-			VideoId: videoIdList,
-		})
-		if err != nil {
-			return err
-		}
-		likeCountList = rpcResp.LikeCountList
-		return nil
-	})
-	eg.Go(func() error {
-		rpcResp, err := rpc.UserGetAuthor(ctx, &user.GetAuthorRequest{
-			AuthorIdList: authorIdList,
-		})
-		if err != nil {
-			return err
-		}
-		authorList = rpcResp.AuthorList
-		return nil
-	})
-	//eg.Go(func() error {
-	//	rpcResp,err:=rpc.GetIsLikeByIdList(ctx,&interaction.GetIsLikeByVideoIdListRequest{
-	//		VideoId: videoIdList,
-	//		UserId:
-	//	})
-	//})
-	if err := eg.Wait(); err != nil {
-		resp.Base = pack.BuildBaseResp(err)
-		return resp, nil
-	}
-	resp.VideoList = service.BuildVideoListResp(videoResp, authorList, likeCountList, nil)
+	resp.VideoList = service.BuildVideoListResp(videoResp, authorList, likeCountList, isLikeList)
 	resp.Count = &count
 	return resp, nil
 }

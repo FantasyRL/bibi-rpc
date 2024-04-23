@@ -1,17 +1,17 @@
 #!/bin/bash
 
-(go run ./api) &
+(go run ./cmd/api) &
 sleep 2s
 printf "\n"
 
-(go run ./rpc/user) &
+(go run ./cmd/user) &
 sleep 2s
 printf "\n"
 
-(go run ./rpc/video) &
+(go run ./cmd/video) &
 sleep 2s
 printf "\n"
 
-(go run ./rpc/interaction) &
+(go run ./cmd/interaction) &
 
 wait

@@ -1,11 +1,10 @@
 DIR = $(shell pwd)#pwd:获得当前路径
 CONFIG_PATH = $(DIR)/config
 IDL_PATH = $(DIR)/idl
-API_PATH = $(DIR)/cmd/api
 RPC = $(DIR)/cmd
-OUTPUT_PATH = $(DIR)/output
-API=api
+API_PATH= $(DIR)/cmd/api
 SHELL=/bin/bash
+MODULE= bibi
 
 .PHONY: init
 init:
@@ -22,17 +21,29 @@ env-down:
 
 SERVICES := api user video interaction
 service = $(word 1, $@)
-
 .PHONY: $(SERVICES)
 $(SERVICES):
-	@echo "$(PERFIX) Automatic run server" \
+	go run $(RPC)/$(service)
 
-	@if [ $(service) != $(API) ];then \
-    		go run $(RPC)/$(service) ; fi
 
-	@if [ $(service) = $(API) ];then \
-		go run $(API_PATH) ; fi
 
 .PHONY: build-all
 build-all:
 	sh start.sh
+
+
+KSERVICES := user video interaction
+.PHONY: kgen
+kgen:
+	@for kservice in $(KSERVICES); do \
+#  		sh kitex_update.sh $$kservice; \
+		kitex -module ${MODULE} idl/$$kservice.thrift; \
+    	cd ${RPC};cd $$kservice;kitex -module ${MODULE} -service $$kservice -use bibi/kitex_gen ../../idl/$$kservice.thrift; \
+    done \
+    echo "done"
+
+.PHONY: hzgen
+hzgen:
+	cd ${API_PATH}; \
+	hz update -idl ${IDL_PATH}/api.thrift; \
+

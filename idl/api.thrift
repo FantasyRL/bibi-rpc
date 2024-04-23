@@ -1,5 +1,10 @@
 namespace go api
-include"base.thrift"
+
+struct BaseResp {
+    1: i64 code
+    2: string msg
+}
+
 
 //user
 struct User {
@@ -20,7 +25,7 @@ struct RegisterRequest {
 }
 
 struct RegisterResponse {
-    1: base.BaseResp base,
+    1: BaseResp base,
     2: optional i64 user_id,
 }
 
@@ -38,7 +43,7 @@ struct Switch2FARequest{
 }
 
 struct Switch2FAResponse{
-    1:base.BaseResp base,
+    1:BaseResp base,
 }
 
 struct LoginRequest {
@@ -48,7 +53,7 @@ struct LoginRequest {
 }
 
 struct LoginResponse {
-    1: base.BaseResp base,
+    1: BaseResp base,
     2: optional User user,
     3: optional string access_token,
     4: optional string refresh_token,
@@ -63,13 +68,13 @@ struct GetAccessTokenRequest{
 }
 
 struct GetAccessTokenResponse{
-    1:base.BaseResp base,
+    1:BaseResp base,
     2:optional string access_token,
 }
 
 
 struct InfoResponse {
-    1: base.BaseResp base,
+    1: BaseResp base,
     2: optional User user,
 }
 
@@ -77,7 +82,7 @@ struct AvatarRequest{
     1:required binary avatar_file,
 }
 struct AvatarResponse{
-    1: base.BaseResp base,
+    1: BaseResp base,
     2: optional User user,
 }
 service UserHandler {
@@ -111,7 +116,7 @@ struct PutVideoRequest{
 }
 
 struct PutVideoResponse{
-    1:base.BaseResp base,
+    1:BaseResp base,
 }
 
 struct ListUserVideoRequest{
@@ -119,7 +124,7 @@ struct ListUserVideoRequest{
 }
 
 struct ListUserVideoResponse{
-    1:base.BaseResp base,
+    1:BaseResp base,
     2:optional i64 count,
     3:optional list<Video> video_list,
 }
@@ -130,7 +135,7 @@ struct SearchVideoRequest{
 }
 
 struct SearchVideoResponse{
-    1:base.BaseResp base,
+    1:BaseResp base,
     2:optional i64 count,
     3:optional list<Video> video_list,
 }
@@ -139,7 +144,7 @@ struct HotVideoRequest{
 }
 
 struct HotVideoResponse{
-    1:base.BaseResp base,
+    1:BaseResp base,
     2:optional list<Video> video_list,
 }
 
@@ -167,7 +172,7 @@ struct LikeActionRequest{
 }
 
 struct LikeActionResponse{
-    1:base.BaseResp base,
+    1:BaseResp base,
 }
 
 struct LikeListRequest{
@@ -175,7 +180,7 @@ struct LikeListRequest{
 }
 
 struct LikeListResponse{
-    1:base.BaseResp base,
+    1:BaseResp base,
     2:optional i64 video_count,
     3:optional list<Video> video_list,
 }
@@ -187,7 +192,7 @@ struct CommentCreateRequest{
 }
 
 struct CommentCreateResponse{
-    1:base.BaseResp base,
+    1:BaseResp base,
 }
 
 struct CommentDeleteRequest{
@@ -196,7 +201,7 @@ struct CommentDeleteRequest{
 }
 
 struct CommentDeleteResponse{
-    1:base.BaseResp base,
+    1:BaseResp base,
 }
 
 struct CommentListRequest{
@@ -205,7 +210,7 @@ struct CommentListRequest{
 }
 
 struct CommentListResponse{
-    1:base.BaseResp base,
+    1:BaseResp base,
     2:optional i64 comment_count,
     3:optional list<Comment> comment_list,
 }

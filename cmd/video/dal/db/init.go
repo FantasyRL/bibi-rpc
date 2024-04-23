@@ -3,6 +3,7 @@ package db
 import (
 	"bibi/pkg/constants"
 	"bibi/pkg/utils"
+	"context"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/driver/mysql"
@@ -32,5 +33,5 @@ func Init() {
 	sqlDB.SetMaxIdleConns(constants.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(constants.MaxConnections)
 	sqlDB.SetConnMaxLifetime(constants.ConnMaxLifetime)
-	DB = DB.Table(constants.VideoTableName)
+	DB = DB.Table(constants.VideoTableName).WithContext(context.Background())
 }

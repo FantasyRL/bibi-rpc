@@ -48,10 +48,10 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"GetAuthor": kitex.NewMethodInfo(
-		getAuthorHandler,
-		newUserHandlerGetAuthorArgs,
-		newUserHandlerGetAuthorResult,
+	"GetUserList": kitex.NewMethodInfo(
+		getUserListHandler,
+		newUserHandlerGetUserListArgs,
+		newUserHandlerGetUserListResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -211,22 +211,22 @@ func newUserHandlerSwitch2FAResult() interface{} {
 	return user.NewUserHandlerSwitch2FAResult()
 }
 
-func getAuthorHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*user.UserHandlerGetAuthorArgs)
-	realResult := result.(*user.UserHandlerGetAuthorResult)
-	success, err := handler.(user.UserHandler).GetAuthor(ctx, realArg.Req)
+func getUserListHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserHandlerGetUserListArgs)
+	realResult := result.(*user.UserHandlerGetUserListResult)
+	success, err := handler.(user.UserHandler).GetUserList(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newUserHandlerGetAuthorArgs() interface{} {
-	return user.NewUserHandlerGetAuthorArgs()
+func newUserHandlerGetUserListArgs() interface{} {
+	return user.NewUserHandlerGetUserListArgs()
 }
 
-func newUserHandlerGetAuthorResult() interface{} {
-	return user.NewUserHandlerGetAuthorResult()
+func newUserHandlerGetUserListResult() interface{} {
+	return user.NewUserHandlerGetUserListResult()
 }
 
 type kClient struct {
@@ -289,11 +289,11 @@ func (p *kClient) Switch2FA(ctx context.Context, req *user.Switch2FARequest) (r 
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) GetAuthor(ctx context.Context, req *user.GetAuthorRequest) (r *user.GetAuthorResponse, err error) {
-	var _args user.UserHandlerGetAuthorArgs
+func (p *kClient) GetUserList(ctx context.Context, req *user.GetUsersRequest) (r *user.GetUsersResponse, err error) {
+	var _args user.UserHandlerGetUserListArgs
 	_args.Req = req
-	var _result user.UserHandlerGetAuthorResult
-	if err = p.c.Call(ctx, "GetAuthor", &_args, &_result); err != nil {
+	var _result user.UserHandlerGetUserListResult
+	if err = p.c.Call(ctx, "GetUserList", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

@@ -3,8 +3,8 @@ package service
 import (
 	"bibi/cmd/interaction/dal/cache"
 	"bibi/cmd/interaction/dal/db"
+	"bibi/kitex_gen/base"
 	"bibi/kitex_gen/interaction"
-	"bibi/kitex_gen/user"
 	"bibi/pkg/errno"
 	"golang.org/x/sync/errgroup"
 )
@@ -14,11 +14,11 @@ func (s *InteractionService) CommentCreate(req *interaction.CommentCreateRequest
 	var err error
 	var exist = false
 	comment := new(db.Comment)
-	commentModel := &interaction.Comment{
+	commentModel := &base.Comment{
 		VideoId:  req.VideoId,
 		ParentId: req.ParentId,
 		Content:  req.Content,
-		User: &user.User{
+		User: &base.User{
 			Id: uid,
 		},
 	}
@@ -68,10 +68,10 @@ func (s *InteractionService) CommentCreate(req *interaction.CommentCreateRequest
 
 func (s *InteractionService) CommentDelete(req *interaction.CommentDeleteRequest, uid int64) error {
 	var eg errgroup.Group
-	var commentModel = &interaction.Comment{
+	var commentModel = &base.Comment{
 		Id:      req.CommentId,
 		VideoId: req.VideoId,
-		User: &user.User{
+		User: &base.User{
 			Id: uid,
 		},
 	}
