@@ -2,16 +2,7 @@ namespace go user
 
 include "base.thrift"
 
-struct User {
-    1: i64 id,
-    2: string name,
-    3: string email,
-    4: i64 follow_count,
-    5: i64 follower_count,
-    6: bool is_follow,
-    7: string avatar,
-    8: i64 video_count,
-}
+
 
 struct RegisterRequest {
     1: string username,
@@ -50,7 +41,7 @@ struct LoginRequest {
 
 struct LoginResponse {
     1: base.BaseResp base,
-    2: optional User user,
+    2: optional base.User user,
 }
 
 struct InfoRequest {
@@ -59,7 +50,7 @@ struct InfoRequest {
 
 struct InfoResponse {
     1: base.BaseResp base,
-    2: optional User user,
+    2: optional base.User user,
 }
 
 struct AvatarRequest{
@@ -68,16 +59,16 @@ struct AvatarRequest{
 }
 struct AvatarResponse{
     1: base.BaseResp base,
-    2: optional User user,
+    2: optional base.User user,
 }
 
 //rpc
-struct GetAuthorRequest{
-    1:list<i64> author_id_list,
+struct GetUsersRequest{
+    1:list<i64> user_id_list,
 }
 
-struct GetAuthorResponse{
-    1:list<User> author_list,
+struct GetUsersResponse{
+    1:list<base.User> user_list,
 }
 
 service UserHandler {
@@ -88,5 +79,5 @@ service UserHandler {
 //    OTP2FAResp OTP2FA(1:OTP2FAReq req)(api.get="/bibi/user/2fa"),
     Switch2FAResponse Switch2FA(1:Switch2FARequest req)(api.post="/bibi/user/switch2fa"),
 
-    GetAuthorResponse GetAuthor(1:GetAuthorRequest req),
+    GetUsersResponse GetUserList(1:GetUsersRequest req),
 }

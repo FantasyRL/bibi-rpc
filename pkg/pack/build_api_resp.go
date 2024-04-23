@@ -2,11 +2,7 @@ package pack
 
 import (
 	"bibi/cmd/api/biz/model/api"
-	base2 "bibi/cmd/api/biz/model/base"
 	"bibi/kitex_gen/base"
-	"bibi/kitex_gen/interaction"
-	"bibi/kitex_gen/user"
-	"bibi/kitex_gen/video"
 	"bibi/pkg/errno"
 	"errors"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -34,21 +30,21 @@ func ErrToResp(err errno.ErrNo) *base.BaseResp {
 	}
 }
 
-func ConvertToAPIBaseResp(baseResp *base.BaseResp) *base2.BaseResp {
-	return &base2.BaseResp{
+func ConvertToAPIBaseResp(baseResp *base.BaseResp) *api.BaseResp {
+	return &api.BaseResp{
 		Code: baseResp.Code,
 		Msg:  baseResp.Msg,
 	}
 }
 
 func SendRPCFailResp(c *app.RequestContext, err error) {
-	c.JSON(consts.StatusOK, base2.BaseResp{
+	c.JSON(consts.StatusOK, api.BaseResp{
 		Code: -1,
 		Msg:  errno.ConvertErr(err).Error(),
 	})
 }
 
-func ConvertToAPIUser(kitexUser *user.User) *api.User {
+func ConvertToAPIUser(kitexUser *base.User) *api.User {
 	return &api.User{
 		ID:            kitexUser.Id,
 		Name:          kitexUser.Name,
@@ -63,7 +59,7 @@ func ConvertToAPIUser(kitexUser *user.User) *api.User {
 
 func ToUserResp(_user interface{}) *api.User {
 	//这里使用了一个及其抽象的断言
-	p, _ := (_user).(*user.User)
+	p, _ := (_user).(*base.User)
 	return &api.User{
 		ID:     p.Id,
 		Name:   p.Name,
@@ -72,7 +68,7 @@ func ToUserResp(_user interface{}) *api.User {
 	}
 }
 
-func ConvertToAPIVideo(kitexVideo *video.Video) *api.Video {
+func ConvertToAPIVideo(kitexVideo *base.Video) *api.Video {
 	return &api.Video{
 		ID:           kitexVideo.Id,
 		Title:        kitexVideo.Title,
@@ -87,7 +83,7 @@ func ConvertToAPIVideo(kitexVideo *video.Video) *api.Video {
 	}
 }
 
-func ConvertToAPIVideos(kitexVideos []*video.Video) []*api.Video {
+func ConvertToAPIVideos(kitexVideos []*base.Video) []*api.Video {
 	videosResp := make([]*api.Video, len(kitexVideos))
 	for i, v := range kitexVideos {
 		videosResp[i] = ConvertToAPIVideo(v)
@@ -95,7 +91,7 @@ func ConvertToAPIVideos(kitexVideos []*video.Video) []*api.Video {
 	return videosResp
 }
 
-func ConvertToAPIComment(kitexComment *interaction.Comment) *api.Comment {
+func ConvertToAPIComment(kitexComment *base.Comment) *api.Comment {
 	return &api.Comment{
 		ID:          kitexComment.Id,
 		VideoID:     kitexComment.VideoId,
@@ -106,7 +102,7 @@ func ConvertToAPIComment(kitexComment *interaction.Comment) *api.Comment {
 	}
 }
 
-func ConvertToAPIComments(kitexComments []*interaction.Comment) []*api.Comment {
+func ConvertToAPIComments(kitexComments []*base.Comment) []*api.Comment {
 	commentsResp := make([]*api.Comment, len(kitexComments))
 	for i, v := range kitexComments {
 		commentsResp[i] = ConvertToAPIComment(v)

@@ -2,7 +2,7 @@ package service
 
 import (
 	"bibi/cmd/user/dal/db"
-	"bibi/kitex_gen/user"
+	"bibi/kitex_gen/base"
 	aliyunoss "bibi/pkg/utils/oss"
 	"context"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -30,8 +30,8 @@ func NewAvatarService(ctx context.Context) *AvatarService {
 	return &AvatarService{ctx: ctx, bucket: bucket}
 }
 
-func BuildUserResp(dbUser *db.User) *user.User {
-	return &user.User{
+func BuildUserResp(dbUser *db.User) *base.User {
+	return &base.User{
 		Id:     dbUser.ID,
 		Name:   dbUser.UserName,
 		Email:  dbUser.Email,
@@ -39,8 +39,8 @@ func BuildUserResp(dbUser *db.User) *user.User {
 	}
 }
 
-func BuildUsersResp(dbUsers *[]db.User) []*user.User {
-	usersResp := make([]*user.User, len(*dbUsers))
+func BuildUsersResp(dbUsers *[]db.User) []*base.User {
+	usersResp := make([]*base.User, len(*dbUsers))
 	for i, v := range *dbUsers {
 		usersResp[i] = BuildUserResp(&v)
 	}

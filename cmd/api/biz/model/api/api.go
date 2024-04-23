@@ -3,11 +3,189 @@
 package api
 
 import (
-	"bibi/cmd/api/biz/model/base"
 	"context"
 	"fmt"
 	"github.com/apache/thrift/lib/go/thrift"
 )
+
+type BaseResp struct {
+	Code int64  `thrift:"code,1" form:"code" json:"code" query:"code"`
+	Msg  string `thrift:"msg,2" form:"msg" json:"msg" query:"msg"`
+}
+
+func NewBaseResp() *BaseResp {
+	return &BaseResp{}
+}
+
+func (p *BaseResp) GetCode() (v int64) {
+	return p.Code
+}
+
+func (p *BaseResp) GetMsg() (v string) {
+	return p.Msg
+}
+
+var fieldIDToName_BaseResp = map[int16]string{
+	1: "code",
+	2: "msg",
+}
+
+func (p *BaseResp) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_BaseResp[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *BaseResp) ReadField1(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Code = v
+	}
+	return nil
+}
+func (p *BaseResp) ReadField2(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Msg = v
+	}
+	return nil
+}
+
+func (p *BaseResp) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("BaseResp"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *BaseResp) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("code", thrift.I64, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Code); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *BaseResp) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("msg", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Msg); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *BaseResp) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("BaseResp(%+v)", *p)
+
+}
 
 // user
 type User struct {
@@ -699,17 +877,17 @@ func (p *RegisterRequest) String() string {
 }
 
 type RegisterResponse struct {
-	Base   *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	UserID *int64         `thrift:"user_id,2,optional" form:"user_id" json:"user_id,omitempty" query:"user_id"`
+	Base   *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	UserID *int64    `thrift:"user_id,2,optional" form:"user_id" json:"user_id,omitempty" query:"user_id"`
 }
 
 func NewRegisterResponse() *RegisterResponse {
 	return &RegisterResponse{}
 }
 
-var RegisterResponse_Base_DEFAULT *base.BaseResp
+var RegisterResponse_Base_DEFAULT *BaseResp
 
-func (p *RegisterResponse) GetBase() (v *base.BaseResp) {
+func (p *RegisterResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return RegisterResponse_Base_DEFAULT
 	}
@@ -803,7 +981,7 @@ ReadStructEndError:
 }
 
 func (p *RegisterResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -1101,16 +1279,16 @@ func (p *Switch2FARequest) String() string {
 }
 
 type Switch2FAResponse struct {
-	Base *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	Base *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
 }
 
 func NewSwitch2FAResponse() *Switch2FAResponse {
 	return &Switch2FAResponse{}
 }
 
-var Switch2FAResponse_Base_DEFAULT *base.BaseResp
+var Switch2FAResponse_Base_DEFAULT *BaseResp
 
-func (p *Switch2FAResponse) GetBase() (v *base.BaseResp) {
+func (p *Switch2FAResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return Switch2FAResponse_Base_DEFAULT
 	}
@@ -1182,7 +1360,7 @@ ReadStructEndError:
 }
 
 func (p *Switch2FAResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -1492,19 +1670,19 @@ func (p *LoginRequest) String() string {
 }
 
 type LoginResponse struct {
-	Base         *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	User         *User          `thrift:"user,2,optional" form:"user" json:"user,omitempty" query:"user"`
-	AccessToken  *string        `thrift:"access_token,3,optional" form:"access_token" json:"access_token,omitempty" query:"access_token"`
-	RefreshToken *string        `thrift:"refresh_token,4,optional" form:"refresh_token" json:"refresh_token,omitempty" query:"refresh_token"`
+	Base         *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	User         *User     `thrift:"user,2,optional" form:"user" json:"user,omitempty" query:"user"`
+	AccessToken  *string   `thrift:"access_token,3,optional" form:"access_token" json:"access_token,omitempty" query:"access_token"`
+	RefreshToken *string   `thrift:"refresh_token,4,optional" form:"refresh_token" json:"refresh_token,omitempty" query:"refresh_token"`
 }
 
 func NewLoginResponse() *LoginResponse {
 	return &LoginResponse{}
 }
 
-var LoginResponse_Base_DEFAULT *base.BaseResp
+var LoginResponse_Base_DEFAULT *BaseResp
 
-func (p *LoginResponse) GetBase() (v *base.BaseResp) {
+func (p *LoginResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return LoginResponse_Base_DEFAULT
 	}
@@ -1642,7 +1820,7 @@ ReadStructEndError:
 }
 
 func (p *LoginResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -2020,17 +2198,17 @@ func (p *GetAccessTokenRequest) String() string {
 }
 
 type GetAccessTokenResponse struct {
-	Base        *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	AccessToken *string        `thrift:"access_token,2,optional" form:"access_token" json:"access_token,omitempty" query:"access_token"`
+	Base        *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	AccessToken *string   `thrift:"access_token,2,optional" form:"access_token" json:"access_token,omitempty" query:"access_token"`
 }
 
 func NewGetAccessTokenResponse() *GetAccessTokenResponse {
 	return &GetAccessTokenResponse{}
 }
 
-var GetAccessTokenResponse_Base_DEFAULT *base.BaseResp
+var GetAccessTokenResponse_Base_DEFAULT *BaseResp
 
-func (p *GetAccessTokenResponse) GetBase() (v *base.BaseResp) {
+func (p *GetAccessTokenResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return GetAccessTokenResponse_Base_DEFAULT
 	}
@@ -2124,7 +2302,7 @@ ReadStructEndError:
 }
 
 func (p *GetAccessTokenResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -2217,17 +2395,17 @@ func (p *GetAccessTokenResponse) String() string {
 }
 
 type InfoResponse struct {
-	Base *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	User *User          `thrift:"user,2,optional" form:"user" json:"user,omitempty" query:"user"`
+	Base *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	User *User     `thrift:"user,2,optional" form:"user" json:"user,omitempty" query:"user"`
 }
 
 func NewInfoResponse() *InfoResponse {
 	return &InfoResponse{}
 }
 
-var InfoResponse_Base_DEFAULT *base.BaseResp
+var InfoResponse_Base_DEFAULT *BaseResp
 
-func (p *InfoResponse) GetBase() (v *base.BaseResp) {
+func (p *InfoResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return InfoResponse_Base_DEFAULT
 	}
@@ -2321,7 +2499,7 @@ ReadStructEndError:
 }
 
 func (p *InfoResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -2555,17 +2733,17 @@ func (p *AvatarRequest) String() string {
 }
 
 type AvatarResponse struct {
-	Base *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	User *User          `thrift:"user,2,optional" form:"user" json:"user,omitempty" query:"user"`
+	Base *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	User *User     `thrift:"user,2,optional" form:"user" json:"user,omitempty" query:"user"`
 }
 
 func NewAvatarResponse() *AvatarResponse {
 	return &AvatarResponse{}
 }
 
-var AvatarResponse_Base_DEFAULT *base.BaseResp
+var AvatarResponse_Base_DEFAULT *BaseResp
 
-func (p *AvatarResponse) GetBase() (v *base.BaseResp) {
+func (p *AvatarResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return AvatarResponse_Base_DEFAULT
 	}
@@ -2659,7 +2837,7 @@ ReadStructEndError:
 }
 
 func (p *AvatarResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -3534,16 +3712,16 @@ func (p *PutVideoRequest) String() string {
 }
 
 type PutVideoResponse struct {
-	Base *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	Base *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
 }
 
 func NewPutVideoResponse() *PutVideoResponse {
 	return &PutVideoResponse{}
 }
 
-var PutVideoResponse_Base_DEFAULT *base.BaseResp
+var PutVideoResponse_Base_DEFAULT *BaseResp
 
-func (p *PutVideoResponse) GetBase() (v *base.BaseResp) {
+func (p *PutVideoResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return PutVideoResponse_Base_DEFAULT
 	}
@@ -3615,7 +3793,7 @@ ReadStructEndError:
 }
 
 func (p *PutVideoResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -3819,18 +3997,18 @@ func (p *ListUserVideoRequest) String() string {
 }
 
 type ListUserVideoResponse struct {
-	Base      *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	Count     *int64         `thrift:"count,2,optional" form:"count" json:"count,omitempty" query:"count"`
-	VideoList []*Video       `thrift:"video_list,3,optional" form:"video_list" json:"video_list,omitempty" query:"video_list"`
+	Base      *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	Count     *int64    `thrift:"count,2,optional" form:"count" json:"count,omitempty" query:"count"`
+	VideoList []*Video  `thrift:"video_list,3,optional" form:"video_list" json:"video_list,omitempty" query:"video_list"`
 }
 
 func NewListUserVideoResponse() *ListUserVideoResponse {
 	return &ListUserVideoResponse{}
 }
 
-var ListUserVideoResponse_Base_DEFAULT *base.BaseResp
+var ListUserVideoResponse_Base_DEFAULT *BaseResp
 
-func (p *ListUserVideoResponse) GetBase() (v *base.BaseResp) {
+func (p *ListUserVideoResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return ListUserVideoResponse_Base_DEFAULT
 	}
@@ -3946,7 +4124,7 @@ ReadStructEndError:
 }
 
 func (p *ListUserVideoResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -4283,18 +4461,18 @@ func (p *SearchVideoRequest) String() string {
 }
 
 type SearchVideoResponse struct {
-	Base      *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	Count     *int64         `thrift:"count,2,optional" form:"count" json:"count,omitempty" query:"count"`
-	VideoList []*Video       `thrift:"video_list,3,optional" form:"video_list" json:"video_list,omitempty" query:"video_list"`
+	Base      *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	Count     *int64    `thrift:"count,2,optional" form:"count" json:"count,omitempty" query:"count"`
+	VideoList []*Video  `thrift:"video_list,3,optional" form:"video_list" json:"video_list,omitempty" query:"video_list"`
 }
 
 func NewSearchVideoResponse() *SearchVideoResponse {
 	return &SearchVideoResponse{}
 }
 
-var SearchVideoResponse_Base_DEFAULT *base.BaseResp
+var SearchVideoResponse_Base_DEFAULT *BaseResp
 
-func (p *SearchVideoResponse) GetBase() (v *base.BaseResp) {
+func (p *SearchVideoResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return SearchVideoResponse_Base_DEFAULT
 	}
@@ -4410,7 +4588,7 @@ ReadStructEndError:
 }
 
 func (p *SearchVideoResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -4633,17 +4811,17 @@ func (p *HotVideoRequest) String() string {
 }
 
 type HotVideoResponse struct {
-	Base      *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	VideoList []*Video       `thrift:"video_list,2,optional" form:"video_list" json:"video_list,omitempty" query:"video_list"`
+	Base      *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	VideoList []*Video  `thrift:"video_list,2,optional" form:"video_list" json:"video_list,omitempty" query:"video_list"`
 }
 
 func NewHotVideoResponse() *HotVideoResponse {
 	return &HotVideoResponse{}
 }
 
-var HotVideoResponse_Base_DEFAULT *base.BaseResp
+var HotVideoResponse_Base_DEFAULT *BaseResp
 
-func (p *HotVideoResponse) GetBase() (v *base.BaseResp) {
+func (p *HotVideoResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return HotVideoResponse_Base_DEFAULT
 	}
@@ -4737,7 +4915,7 @@ ReadStructEndError:
 }
 
 func (p *HotVideoResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -5475,16 +5653,16 @@ func (p *LikeActionRequest) String() string {
 }
 
 type LikeActionResponse struct {
-	Base *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	Base *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
 }
 
 func NewLikeActionResponse() *LikeActionResponse {
 	return &LikeActionResponse{}
 }
 
-var LikeActionResponse_Base_DEFAULT *base.BaseResp
+var LikeActionResponse_Base_DEFAULT *BaseResp
 
-func (p *LikeActionResponse) GetBase() (v *base.BaseResp) {
+func (p *LikeActionResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return LikeActionResponse_Base_DEFAULT
 	}
@@ -5556,7 +5734,7 @@ ReadStructEndError:
 }
 
 func (p *LikeActionResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -5760,18 +5938,18 @@ func (p *LikeListRequest) String() string {
 }
 
 type LikeListResponse struct {
-	Base       *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	VideoCount *int64         `thrift:"video_count,2,optional" form:"video_count" json:"video_count,omitempty" query:"video_count"`
-	VideoList  []*Video       `thrift:"video_list,3,optional" form:"video_list" json:"video_list,omitempty" query:"video_list"`
+	Base       *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	VideoCount *int64    `thrift:"video_count,2,optional" form:"video_count" json:"video_count,omitempty" query:"video_count"`
+	VideoList  []*Video  `thrift:"video_list,3,optional" form:"video_list" json:"video_list,omitempty" query:"video_list"`
 }
 
 func NewLikeListResponse() *LikeListResponse {
 	return &LikeListResponse{}
 }
 
-var LikeListResponse_Base_DEFAULT *base.BaseResp
+var LikeListResponse_Base_DEFAULT *BaseResp
 
-func (p *LikeListResponse) GetBase() (v *base.BaseResp) {
+func (p *LikeListResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return LikeListResponse_Base_DEFAULT
 	}
@@ -5887,7 +6065,7 @@ ReadStructEndError:
 }
 
 func (p *LikeListResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -6279,16 +6457,16 @@ func (p *CommentCreateRequest) String() string {
 }
 
 type CommentCreateResponse struct {
-	Base *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	Base *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
 }
 
 func NewCommentCreateResponse() *CommentCreateResponse {
 	return &CommentCreateResponse{}
 }
 
-var CommentCreateResponse_Base_DEFAULT *base.BaseResp
+var CommentCreateResponse_Base_DEFAULT *BaseResp
 
-func (p *CommentCreateResponse) GetBase() (v *base.BaseResp) {
+func (p *CommentCreateResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return CommentCreateResponse_Base_DEFAULT
 	}
@@ -6360,7 +6538,7 @@ ReadStructEndError:
 }
 
 func (p *CommentCreateResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -6615,16 +6793,16 @@ func (p *CommentDeleteRequest) String() string {
 }
 
 type CommentDeleteResponse struct {
-	Base *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	Base *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
 }
 
 func NewCommentDeleteResponse() *CommentDeleteResponse {
 	return &CommentDeleteResponse{}
 }
 
-var CommentDeleteResponse_Base_DEFAULT *base.BaseResp
+var CommentDeleteResponse_Base_DEFAULT *BaseResp
 
-func (p *CommentDeleteResponse) GetBase() (v *base.BaseResp) {
+func (p *CommentDeleteResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return CommentDeleteResponse_Base_DEFAULT
 	}
@@ -6696,7 +6874,7 @@ ReadStructEndError:
 }
 
 func (p *CommentDeleteResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
@@ -6951,18 +7129,18 @@ func (p *CommentListRequest) String() string {
 }
 
 type CommentListResponse struct {
-	Base         *base.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	CommentCount *int64         `thrift:"comment_count,2,optional" form:"comment_count" json:"comment_count,omitempty" query:"comment_count"`
-	CommentList  []*Comment     `thrift:"comment_list,3,optional" form:"comment_list" json:"comment_list,omitempty" query:"comment_list"`
+	Base         *BaseResp  `thrift:"base,1" form:"base" json:"base" query:"base"`
+	CommentCount *int64     `thrift:"comment_count,2,optional" form:"comment_count" json:"comment_count,omitempty" query:"comment_count"`
+	CommentList  []*Comment `thrift:"comment_list,3,optional" form:"comment_list" json:"comment_list,omitempty" query:"comment_list"`
 }
 
 func NewCommentListResponse() *CommentListResponse {
 	return &CommentListResponse{}
 }
 
-var CommentListResponse_Base_DEFAULT *base.BaseResp
+var CommentListResponse_Base_DEFAULT *BaseResp
 
-func (p *CommentListResponse) GetBase() (v *base.BaseResp) {
+func (p *CommentListResponse) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
 		return CommentListResponse_Base_DEFAULT
 	}
@@ -7078,7 +7256,7 @@ ReadStructEndError:
 }
 
 func (p *CommentListResponse) ReadField1(iprot thrift.TProtocol) error {
-	p.Base = base.NewBaseResp()
+	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}

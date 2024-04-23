@@ -3,8 +3,7 @@ package service
 import (
 	"bibi/cmd/video/dal/db"
 	"bibi/config"
-	"bibi/kitex_gen/user"
-	"bibi/kitex_gen/video"
+	"bibi/kitex_gen/base"
 	aliyunoss "bibi/pkg/utils/oss"
 	"context"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -27,8 +26,8 @@ func NewVideoService(ctx context.Context) *VideoService {
 	return &VideoService{ctx: ctx, bucket: bucket}
 }
 
-func BuildVideoResp(v *db.Video, author *user.User, likeCount int64) *video.Video {
-	return &video.Video{
+func BuildVideoResp(v *db.Video, author *base.User, likeCount int64) *base.Video {
+	return &base.Video{
 		Id:          v.ID,
 		Uid:         v.Uid,
 		Author:      author,
@@ -40,8 +39,8 @@ func BuildVideoResp(v *db.Video, author *user.User, likeCount int64) *video.Vide
 	}
 }
 
-func BuildVideoListResp(videos *[]db.Video, authorList []*user.User, videoLikeCountList []int64, isLikeList []int64) []*video.Video {
-	videoListResp := make([]*video.Video, len(*videos))
+func BuildVideoListResp(videos *[]db.Video, authorList []*base.User, videoLikeCountList []int64, isLikeList []int64) []*base.Video {
+	videoListResp := make([]*base.Video, len(*videos))
 	for i, v := range *videos {
 		videoListResp[i] = BuildVideoResp(&v, authorList[i], videoLikeCountList[i])
 	}

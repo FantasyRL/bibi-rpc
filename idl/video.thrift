@@ -1,20 +1,6 @@
 namespace go video
 
-include "user.thrift"
 include"base.thrift"
-
-struct Video{
-    1:i64 id,
-    2:string title,
-    3:user.User author,
-    4:i64 uid,
-    5:string play_url,
-    6:string cover_url,
-    7:i64 like_count,
-    8:i64 comment_count,
-    9:i64 is_like,
-    10:string publish_time,
-}
 
 struct PutVideoRequest{
     1:i64 user_id,
@@ -35,7 +21,7 @@ struct ListUserVideoRequest{
 struct ListUserVideoResponse{
     1:base.BaseResp base,
     2:optional i64 count,
-    3:optional list<Video> video_list,
+    3:optional list<base.Video> video_list,
 }
 
 struct SearchVideoRequest{
@@ -46,7 +32,7 @@ struct SearchVideoRequest{
 struct SearchVideoResponse{
     1:base.BaseResp base,
     2:optional i64 count,
-    3:optional list<Video> video_list,
+    3:optional list<base.Video> video_list,
 }
 
 struct HotVideoRequest{
@@ -55,7 +41,7 @@ struct HotVideoRequest{
 
 struct HotVideoResponse{
     1:base.BaseResp base,
-    2:optional list<Video> video_list,
+    2:optional list<base.Video> video_list,
 }
 
 service VideoHandler{

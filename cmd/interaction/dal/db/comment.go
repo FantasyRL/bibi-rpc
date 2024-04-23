@@ -1,7 +1,7 @@
 package db
 
 import (
-	"bibi/kitex_gen/interaction"
+	"bibi/kitex_gen/base"
 	"context"
 	"errors"
 	"gorm.io/gorm"
@@ -20,7 +20,7 @@ type Comment struct {
 	DeletedAt gorm.DeletedAt `sql:"index" msg:"-"` //ignore
 }
 
-func IsParentExist(ctx context.Context, commentModel *interaction.Comment) (bool, error) {
+func IsParentExist(ctx context.Context, commentModel *base.Comment) (bool, error) {
 	var comment = &Comment{
 		ID:      *commentModel.ParentId,
 		VideoID: commentModel.VideoId,
@@ -32,7 +32,7 @@ func IsParentExist(ctx context.Context, commentModel *interaction.Comment) (bool
 	return true, err
 }
 
-func IsCommentExist(ctx context.Context, commentModel *interaction.Comment) (bool, error) {
+func IsCommentExist(ctx context.Context, commentModel *base.Comment) (bool, error) {
 	var comment = &Comment{
 		ID:      commentModel.Id,
 		VideoID: commentModel.VideoId,
@@ -45,7 +45,7 @@ func IsCommentExist(ctx context.Context, commentModel *interaction.Comment) (boo
 	return true, err
 }
 
-func CreateComment(ctx context.Context, commentModel *interaction.Comment) (*Comment, error) {
+func CreateComment(ctx context.Context, commentModel *base.Comment) (*Comment, error) {
 	var comment = &Comment{
 		VideoID: commentModel.VideoId,
 		Uid:     commentModel.User.Id,
@@ -61,7 +61,7 @@ func CreateComment(ctx context.Context, commentModel *interaction.Comment) (*Com
 	return comment, nil
 }
 
-func DeleteComment(ctx context.Context, commentModel *interaction.Comment) (*Comment, error) {
+func DeleteComment(ctx context.Context, commentModel *base.Comment) (*Comment, error) {
 	var comment = &Comment{
 		ID:      commentModel.Id,
 		VideoID: commentModel.VideoId,

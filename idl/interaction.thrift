@@ -1,16 +1,6 @@
 namespace go interaction
-include"user.thrift"
 include"base.thrift"
-include"video.thrift"
 
-struct Comment {
-    1: i64 id,
-    2: i64 video_id,
-    3: optional i64 parent_id,
-    4: user.User user,
-    5: string content,
-    6: string publish_time,
-}
 
 struct LikeActionRequest{
     1:optional i64 video_id,
@@ -31,7 +21,7 @@ struct LikeListRequest{
 struct LikeListResponse{
     1:base.BaseResp base,
     2:optional i64 video_count,
-    3:optional list<video.Video> video_list,
+    3:optional list<base.Video> video_list,
 }
 
 struct CommentCreateRequest{
@@ -63,7 +53,7 @@ struct CommentListRequest{
 struct CommentListResponse{
     1:base.BaseResp base,
     2:optional i64 comment_count,
-    3:optional list<Comment> comment_list,
+    3:optional list<base.Comment> comment_list,
 }
 
 //内部rpc

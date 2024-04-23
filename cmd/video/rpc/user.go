@@ -38,8 +38,8 @@ func InitUserRPC() {
 	userClient = c
 }
 
-func UserGetAuthor(ctx context.Context, req *user.GetAuthorRequest) (*user.GetAuthorResponse, error) {
-	resp, err := userClient.GetAuthor(ctx, req)
+func UserGetUserList(ctx context.Context, req *user.GetUsersRequest) (*user.GetUsersResponse, error) {
+	resp, err := userClient.GetUserList(ctx, req)
 	if err != nil {
 		return nil, err
 	}

@@ -2,7 +2,7 @@ package service
 
 import (
 	"bibi/cmd/interaction/dal/db"
-	"bibi/kitex_gen/interaction"
+	"bibi/kitex_gen/base"
 	"context"
 )
 
@@ -14,8 +14,8 @@ func NewInteractionService(ctx context.Context) *InteractionService {
 	return &InteractionService{ctx: ctx}
 }
 
-func BuildCommentResp(comment *db.Comment) *interaction.Comment {
-	return &interaction.Comment{
+func BuildCommentResp(comment *db.Comment) *base.Comment {
+	return &base.Comment{
 		Id:       comment.ID,
 		VideoId:  comment.VideoID,
 		ParentId: &comment.ParentID,
@@ -25,7 +25,7 @@ func BuildCommentResp(comment *db.Comment) *interaction.Comment {
 	}
 }
 
-func BuildCommentsResp(comments []db.Comment) (commentsResp []*interaction.Comment) {
+func BuildCommentsResp(comments []db.Comment) (commentsResp []*base.Comment) {
 	for _, comment := range comments {
 		commentsResp = append(commentsResp, BuildCommentResp(&comment))
 	}
