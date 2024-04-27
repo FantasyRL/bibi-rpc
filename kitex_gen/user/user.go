@@ -2558,7 +2558,8 @@ func (p *GetUsersRequest) Field1DeepEqual(src []int64) bool {
 }
 
 type GetUsersResponse struct {
-	UserList []*base.User `thrift:"user_list,1" frugal:"1,default,list<base.User>" json:"user_list"`
+	Base     *base.BaseResp `thrift:"base,1" frugal:"1,default,base.BaseResp" json:"base"`
+	UserList []*base.User   `thrift:"user_list,2" frugal:"2,default,list<base.User>" json:"user_list"`
 }
 
 func NewGetUsersResponse() *GetUsersResponse {
@@ -2569,15 +2570,32 @@ func (p *GetUsersResponse) InitDefault() {
 	*p = GetUsersResponse{}
 }
 
+var GetUsersResponse_Base_DEFAULT *base.BaseResp
+
+func (p *GetUsersResponse) GetBase() (v *base.BaseResp) {
+	if !p.IsSetBase() {
+		return GetUsersResponse_Base_DEFAULT
+	}
+	return p.Base
+}
+
 func (p *GetUsersResponse) GetUserList() (v []*base.User) {
 	return p.UserList
+}
+func (p *GetUsersResponse) SetBase(val *base.BaseResp) {
+	p.Base = val
 }
 func (p *GetUsersResponse) SetUserList(val []*base.User) {
 	p.UserList = val
 }
 
 var fieldIDToName_GetUsersResponse = map[int16]string{
-	1: "user_list",
+	1: "base",
+	2: "user_list",
+}
+
+func (p *GetUsersResponse) IsSetBase() bool {
+	return p.Base != nil
 }
 
 func (p *GetUsersResponse) Read(iprot thrift.TProtocol) (err error) {
@@ -2600,8 +2618,16 @@ func (p *GetUsersResponse) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -2637,6 +2663,13 @@ ReadStructEndError:
 }
 
 func (p *GetUsersResponse) ReadField1(iprot thrift.TProtocol) error {
+	p.Base = base.NewBaseResp()
+	if err := p.Base.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+func (p *GetUsersResponse) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -2666,6 +2699,10 @@ func (p *GetUsersResponse) Write(oprot thrift.TProtocol) (err error) {
 			fieldId = 1
 			goto WriteFieldError
 		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
 	}
 	if err = oprot.WriteFieldStop(); err != nil {
 		goto WriteFieldStopError
@@ -2685,7 +2722,24 @@ WriteStructEndError:
 }
 
 func (p *GetUsersResponse) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("user_list", thrift.LIST, 1); err != nil {
+	if err = oprot.WriteFieldBegin("base", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Base.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *GetUsersResponse) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("user_list", thrift.LIST, 2); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.UserList)); err != nil {
@@ -2704,9 +2758,9 @@ func (p *GetUsersResponse) writeField1(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
 func (p *GetUsersResponse) String() string {
@@ -2723,13 +2777,23 @@ func (p *GetUsersResponse) DeepEqual(ano *GetUsersResponse) bool {
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.UserList) {
+	if !p.Field1DeepEqual(ano.Base) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.UserList) {
 		return false
 	}
 	return true
 }
 
-func (p *GetUsersResponse) Field1DeepEqual(src []*base.User) bool {
+func (p *GetUsersResponse) Field1DeepEqual(src *base.BaseResp) bool {
+
+	if !p.Base.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+func (p *GetUsersResponse) Field2DeepEqual(src []*base.User) bool {
 
 	if len(p.UserList) != len(src) {
 		return false

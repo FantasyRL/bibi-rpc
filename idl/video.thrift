@@ -44,9 +44,23 @@ struct HotVideoResponse{
     2:optional list<base.Video> video_list,
 }
 
+
+//rpc
+struct GetVideoByIdListRequest{
+    1:list<i64> video_id_list,
+    2:i64 user_id,
+}
+
+struct GetVideoByIdListResponse{
+    1:base.BaseResp base,
+    2:list<base.Video> video_list,
+    3:i64 count,
+}
+
 service VideoHandler{
     PutVideoResponse PutVideo(1:PutVideoRequest req),
     ListUserVideoResponse ListVideo(1:ListUserVideoRequest req),
     SearchVideoResponse SearchVideo(1:SearchVideoRequest req),
     HotVideoResponse HotVideo(1:HotVideoRequest req),
+    GetVideoByIdListResponse GetVideoByIdList(1:GetVideoByIdListRequest req),
 }

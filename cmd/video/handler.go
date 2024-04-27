@@ -100,3 +100,17 @@ func (s *VideoHandlerImpl) HotVideo(ctx context.Context, req *video.HotVideoRequ
 	// TODO: Your code here...
 	return
 }
+
+// GetVideoByIdList implements the VideoHandlerImpl interface.
+func (s *VideoHandlerImpl) GetVideoByIdList(ctx context.Context, req *video.GetVideoByIdListRequest) (resp *video.GetVideoByIdListResponse, err error) {
+	resp = new(video.GetVideoByIdListResponse)
+	videoResp, count, authorList, likeCountList, isLikeList, err := service.NewVideoService(ctx).ListVideoByIdList(req)
+	resp.Base = pack.BuildBaseResp(err)
+	if err != nil {
+		return resp, nil
+	}
+
+	resp.VideoList = service.BuildVideoListResp(videoResp, authorList, likeCountList, isLikeList)
+	resp.Count = count
+	return resp, nil
+}

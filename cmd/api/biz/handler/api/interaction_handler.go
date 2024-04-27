@@ -3,13 +3,12 @@
 package api
 
 import (
+	api "bibi/cmd/api/biz/model/api"
 	"bibi/cmd/api/biz/rpc"
 	"bibi/kitex_gen/interaction"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
 	"context"
-
-	api "bibi/cmd/api/biz/model/api"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )

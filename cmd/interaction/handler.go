@@ -6,6 +6,7 @@ import (
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
 	"context"
+	"fmt"
 )
 
 // InteractionHandlerImpl implements the last service interface defined in the IDL.
@@ -35,28 +36,15 @@ func (s *InteractionHandlerImpl) LikeAction(ctx context.Context, req *interactio
 // LikeList implements the InteractionHandlerImpl interface.
 func (s *InteractionHandlerImpl) LikeList(ctx context.Context, req *interaction.LikeListRequest) (resp *interaction.LikeListResponse, err error) {
 	resp = new(interaction.LikeListResponse)
-	allLikeResp, err := service.NewInteractionService(ctx).LikeVideoList(req, req.UserId)
+	videoResp, count, err := service.NewInteractionService(ctx).LikeVideoList(req, req.UserId)
+	resp.Base = pack.BuildBaseResp(err)
 	if err != nil {
 		resp.Base = pack.BuildBaseResp(err)
 		return resp, nil
 	}
-	count := int64(len(allLikeResp))
+	resp.VideoList = videoResp
 	resp.VideoCount = &count
-
-	//var likeResp []int64
-	//if len(allLikeResp) <= int(req.PageNum-1)*constants.PageSize || int(req.PageNum-1)*constants.PageSize < 0 {
-	//	resp.Base = pack.BuildBaseResp(nil)
-	//	return resp, nil
-	//} else {
-	//	fst := int(req.PageNum-1) * constants.PageSize
-	//	for i := fst; i < fst+constants.PageSize && i < len(allLikeResp); i++ {
-	//		likeResp = append(likeResp, allLikeResp[i])
-	//	}
-	//}
-	//todo:
-	//videosResp:=make([]*video.Video,constants.PageSize)
-	//GetLikeVideoList
-
+	fmt.Println(*videoResp[1])
 	return resp, nil
 }
 
@@ -93,7 +81,13 @@ func (s *InteractionHandlerImpl) GetLikesCountByVideoIdList(ctx context.Context,
 // GetIsLikeByVideoIdList implements the InteractionHandlerImpl interface.
 func (s *InteractionHandlerImpl) GetIsLikeByVideoIdList(ctx context.Context, req *interaction.GetIsLikeByVideoIdListRequest) (resp *interaction.GetIsLikeByVideoIdListResponse, err error) {
 	resp = new(interaction.GetIsLikeByVideoIdListResponse)
-	return
+	isLikeResp, err := service.NewInteractionService(ctx).GetIsLikeByVideoIdList(req)
+	resp.Base = pack.BuildBaseResp(err)
+	if err != nil {
+		return resp, nil
+	}
+	resp.IsLikeList = isLikeResp
+	return resp, nil
 }
 
 // CommentList implements the InteractionHandlerImpl interface.

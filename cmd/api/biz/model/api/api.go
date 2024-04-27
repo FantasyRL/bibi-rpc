@@ -2937,7 +2937,7 @@ type Video struct {
 	CoverURL     string `thrift:"cover_url,6" form:"cover_url" json:"cover_url" query:"cover_url"`
 	LikeCount    int64  `thrift:"like_count,7" form:"like_count" json:"like_count" query:"like_count"`
 	CommentCount int64  `thrift:"comment_count,8" form:"comment_count" json:"comment_count" query:"comment_count"`
-	IsLike       int64  `thrift:"is_like,9" form:"is_like" json:"is_like" query:"is_like"`
+	IsLike       bool   `thrift:"is_like,9" form:"is_like" json:"is_like" query:"is_like"`
 	PublishTime  string `thrift:"publish_time,10" form:"publish_time" json:"publish_time" query:"publish_time"`
 }
 
@@ -2982,7 +2982,7 @@ func (p *Video) GetCommentCount() (v int64) {
 	return p.CommentCount
 }
 
-func (p *Video) GetIsLike() (v int64) {
+func (p *Video) GetIsLike() (v bool) {
 	return p.IsLike
 }
 
@@ -3091,7 +3091,7 @@ func (p *Video) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 9:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.BOOL {
 				if err = p.ReadField9(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -3207,7 +3207,7 @@ func (p *Video) ReadField8(iprot thrift.TProtocol) error {
 }
 func (p *Video) ReadField9(iprot thrift.TProtocol) error {
 
-	if v, err := iprot.ReadI64(); err != nil {
+	if v, err := iprot.ReadBool(); err != nil {
 		return err
 	} else {
 		p.IsLike = v
@@ -3425,10 +3425,10 @@ WriteFieldEndError:
 }
 
 func (p *Video) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("is_like", thrift.I64, 9); err != nil {
+	if err = oprot.WriteFieldBegin("is_like", thrift.BOOL, 9); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.IsLike); err != nil {
+	if err := oprot.WriteBool(p.IsLike); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

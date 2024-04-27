@@ -105,7 +105,7 @@ struct Video{
     6:string cover_url,
     7:i64 like_count,
     8:i64 comment_count,
-    9:i64 is_like,
+    9:bool is_like,
     10:string publish_time,
 }
 

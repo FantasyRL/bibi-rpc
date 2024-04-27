@@ -69,6 +69,10 @@ func ToUserResp(_user interface{}) *api.User {
 }
 
 func ConvertToAPIVideo(kitexVideo *base.Video) *api.Video {
+	var isLike bool = false
+	if kitexVideo.IsLike == 1 {
+		isLike = true
+	}
 	return &api.Video{
 		ID:           kitexVideo.Id,
 		Title:        kitexVideo.Title,
@@ -78,15 +82,15 @@ func ConvertToAPIVideo(kitexVideo *base.Video) *api.Video {
 		CoverURL:     kitexVideo.CoverUrl,
 		LikeCount:    kitexVideo.LikeCount,
 		CommentCount: kitexVideo.CommentCount,
-		IsLike:       kitexVideo.IsLike,
+		IsLike:       isLike,
 		PublishTime:  kitexVideo.PublishTime,
 	}
 }
 
 func ConvertToAPIVideos(kitexVideos []*base.Video) []*api.Video {
-	videosResp := make([]*api.Video, len(kitexVideos))
-	for i, v := range kitexVideos {
-		videosResp[i] = ConvertToAPIVideo(v)
+	videosResp := make([]*api.Video, 0)
+	for _, v := range kitexVideos {
+		videosResp = append(videosResp, ConvertToAPIVideo(v))
 	}
 	return videosResp
 }
