@@ -117,17 +117,12 @@ func (s *UserHandlerImpl) Switch2FA(ctx context.Context, req *user.Switch2FARequ
 	return resp, nil
 }
 
-// GetAuthor implements the UserHandlerImpl interface.
-func (s *UserHandlerImpl) GetAuthor(ctx context.Context, req *user.GetUsersRequest) (resp *user.GetUsersResponse, err error) {
-	resp = new(user.GetUsersResponse)
-
-	userResp, _ := service.NewUserService(ctx).GetUserByIdList(req.UserIdList)
-	resp.UserList = service.BuildUsersResp(userResp)
-	return resp, nil
-}
-
 // GetUserList implements the UserHandlerImpl interface.
 func (s *UserHandlerImpl) GetUserList(ctx context.Context, req *user.GetUsersRequest) (resp *user.GetUsersResponse, err error) {
-	// TODO: Your code here...
-	return
+	resp = new(user.GetUsersResponse)
+
+	userResp, err := service.NewUserService(ctx).GetUserByIdList(req.UserIdList)
+	resp.Base = pack.BuildBaseResp(err)
+	resp.UserList = service.BuildUsersResp(userResp)
+	return resp, nil
 }

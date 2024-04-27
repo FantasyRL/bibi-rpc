@@ -4,6 +4,7 @@ IDL_PATH = $(DIR)/idl
 RPC = $(DIR)/cmd
 API_PATH= $(DIR)/cmd/api
 SHELL=/bin/bash
+KITEX_GEN_PATH=$(DIR)/kitex_gen
 MODULE= bibi
 
 .PHONY: init
@@ -21,7 +22,7 @@ env-down:
 
 SERVICES := api user video interaction
 service = $(word 1, $@)
-.PHONY: $(SERVICES)
+.PHONY: ${SERVICES}
 $(SERVICES):
 	go run $(RPC)/$(service)
 
@@ -36,11 +37,11 @@ KSERVICES := user video interaction
 .PHONY: kgen
 kgen:
 	@for kservice in $(KSERVICES); do \
-#  		sh kitex_update.sh $$kservice; \
-		kitex -module ${MODULE} idl/$$kservice.thrift; \
-    	cd ${RPC};cd $$kservice;kitex -module ${MODULE} -service $$kservice -use bibi/kitex_gen ../../idl/$$kservice.thrift; \
+		kitex -module ${MODULE} ${IDL_PATH}/$$kservice.thrift; \
+    	cd ${RPC};cd $$kservice;kitex -module ${MODULE} -service $$kservice -use ${KITEX_GEN_PATH} ${IDL_PATH}/$$kservice.thrift; \
+    	cd ../../; \
     done \
-    echo "done"
+
 
 .PHONY: hzgen
 hzgen:

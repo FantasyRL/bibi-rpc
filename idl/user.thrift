@@ -68,7 +68,8 @@ struct GetUsersRequest{
 }
 
 struct GetUsersResponse{
-    1:list<base.User> user_list,
+    1:base.BaseResp base,
+    2:list<base.User> user_list,
 }
 
 service UserHandler {

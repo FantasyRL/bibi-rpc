@@ -41,6 +41,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"GetVideoByIdList": kitex.NewMethodInfo(
+		getVideoByIdListHandler,
+		newVideoHandlerGetVideoByIdListArgs,
+		newVideoHandlerGetVideoByIdListResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 }
 
 var (
@@ -179,6 +186,24 @@ func newVideoHandlerHotVideoResult() interface{} {
 	return video.NewVideoHandlerHotVideoResult()
 }
 
+func getVideoByIdListHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*video.VideoHandlerGetVideoByIdListArgs)
+	realResult := result.(*video.VideoHandlerGetVideoByIdListResult)
+	success, err := handler.(video.VideoHandler).GetVideoByIdList(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newVideoHandlerGetVideoByIdListArgs() interface{} {
+	return video.NewVideoHandlerGetVideoByIdListArgs()
+}
+
+func newVideoHandlerGetVideoByIdListResult() interface{} {
+	return video.NewVideoHandlerGetVideoByIdListResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -224,6 +249,16 @@ func (p *kClient) HotVideo(ctx context.Context, req *video.HotVideoRequest) (r *
 	_args.Req = req
 	var _result video.VideoHandlerHotVideoResult
 	if err = p.c.Call(ctx, "HotVideo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetVideoByIdList(ctx context.Context, req *video.GetVideoByIdListRequest) (r *video.GetVideoByIdListResponse, err error) {
+	var _args video.VideoHandlerGetVideoByIdListArgs
+	_args.Req = req
+	var _result video.VideoHandlerGetVideoByIdListResult
+	if err = p.c.Call(ctx, "GetVideoByIdList", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
