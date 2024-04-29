@@ -30,6 +30,27 @@ func ErrToResp(err errno.ErrNo) *base.BaseResp {
 	}
 }
 
+func BuildAPIBaseResp(err error) *api.BaseResp {
+	if err == nil {
+		return ErrToAPIResp(errno.Success)
+	}
+
+	e := errno.ErrNo{}
+	if errors.As(err, &e) {
+		return ErrToAPIResp(e)
+	}
+
+	_e := errno.ServiceError.WithMessage(err.Error()) //未知错误
+	return ErrToAPIResp(_e)
+}
+
+func ErrToAPIResp(err errno.ErrNo) *api.BaseResp {
+	return &api.BaseResp{
+		Code: err.ErrorCode,
+		Msg:  err.ErrorMsg,
+	}
+}
+
 func ConvertToAPIBaseResp(baseResp *base.BaseResp) *api.BaseResp {
 	return &api.BaseResp{
 		Code: baseResp.Code,
@@ -51,9 +72,9 @@ func ConvertToAPIUser(kitexUser *base.User) *api.User {
 		Email:         kitexUser.Email,
 		FollowCount:   kitexUser.FollowerCount,
 		FollowerCount: kitexUser.FollowerCount,
-		//IsFollow: kitexUser.IsFollow,
-		Avatar:     kitexUser.Avatar,
-		VideoCount: kitexUser.VideoCount,
+		IsFollow:      kitexUser.IsFollow,
+		Avatar:        kitexUser.Avatar,
+		VideoCount:    kitexUser.VideoCount,
 	}
 }
 
@@ -66,6 +87,14 @@ func ToUserResp(_user interface{}) *api.User {
 		Email:  p.Email,
 		Avatar: p.Avatar,
 	}
+}
+
+func ConvertToAPIUsers(kitexUsers []*base.User) []*api.User {
+	usersResp := make([]*api.User, 0)
+	for _, v := range kitexUsers {
+		usersResp = append(usersResp, ConvertToAPIUser(v))
+	}
+	return usersResp
 }
 
 func ConvertToAPIVideo(kitexVideo *base.Video) *api.Video {

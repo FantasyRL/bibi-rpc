@@ -222,3 +222,50 @@ service InteractionHandler{
     CommentDeleteResponse CommentDelete(1:CommentDeleteRequest req)(api.post="/bibi/interaction/comment/delete"),
     CommentListResponse CommentList(1:CommentListRequest req)(api.post="/bibi/interaction/comment/list"),
 }
+
+//follow
+struct FollowActionRequest{
+    1:required i64 object_uid,
+    2:required i64 action_type,
+}
+
+struct FollowActionResponse{
+    1:BaseResp base,
+}
+
+struct FollowingListRequest{
+    1:required i64 page_num,
+}
+
+struct FollowingListResponse{
+    1:BaseResp base,
+    2:optional i64 count,
+    3:optional list<User> following_list,
+}
+
+struct FollowerListRequest{
+    1:required i64 page_num,
+}
+
+struct FollowerListResponse{
+    1:BaseResp base,
+    2:optional i64 count,
+    3:optional list<User> follower_list,
+}
+
+struct FriendListRequest{
+    1:required i64 page_num,
+}
+
+struct FriendListResponse{
+    1:BaseResp base,
+    2:optional i64 count,
+    3:optional list<User> friend_list,
+}
+
+service FollowHandler{
+    FollowActionResponse FollowAction(1:FollowActionRequest req)(api.post="/bibi/follow/action"),
+    FollowerListResponse FollowerList(1:FollowerListRequest req)(api.get="/bibi/follow/follower"),
+    FollowingListResponse FollowingList(1:FollowingListRequest req)(api.get="/bibi/follow/following"),
+    FriendListResponse FriendList(1:FriendListRequest req)(api.get="/bibi/follow/friend"),
+}
