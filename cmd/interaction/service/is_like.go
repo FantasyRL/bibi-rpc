@@ -17,10 +17,13 @@ func (s *InteractionService) GetIsLikeByVideoIdList(req *interaction.GetIsLikeBy
 		return nil, err
 	}
 
-	//缓存过期
-	allVideoIdList, err = db.GetVideoByUid(s.ctx, req.UserId)
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, err
+	if allVideoIdList == nil {
+		//缓存过期
+		allVideoIdList, err = db.GetVideoByUid(s.ctx, req.UserId)
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+
 	}
 
 	isLikeResp := make([]int64, len(req.VideoId))

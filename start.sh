@@ -13,5 +13,9 @@ sleep 2s
 printf "\n"
 
 (go run ./cmd/interaction) &
+sleep 2s
+printf "\n"
+
+(go run ./cmd/follow) &
 
 wait

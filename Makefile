@@ -20,7 +20,7 @@ env-up:
 env-down:
 	docker-compose down
 
-SERVICES := api user video interaction
+SERVICES := api user video interaction follow
 service = $(word 1, $@)
 .PHONY: ${SERVICES}
 $(SERVICES):
@@ -33,7 +33,7 @@ build-all:
 	sh start.sh
 
 
-KSERVICES := user video interaction
+KSERVICES := user video interaction follow
 .PHONY: kgen
 kgen:
 	@for kservice in $(KSERVICES); do \
@@ -47,4 +47,5 @@ kgen:
 hzgen:
 	cd ${API_PATH}; \
 	hz update -idl ${IDL_PATH}/api.thrift; \
+	swag init; \
 
