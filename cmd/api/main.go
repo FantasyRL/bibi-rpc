@@ -5,6 +5,7 @@ package main
 import (
 	"bibi/cmd/api/biz/mw/jwt"
 	"bibi/cmd/api/biz/rpc"
+	"bibi/cmd/api/biz/ws/monitor"
 	"bibi/config"
 	"bibi/pkg/constants"
 	"bibi/pkg/utils"
@@ -18,6 +19,7 @@ func Init() {
 	config.Init(constants.APIServiceName)
 	rpc.Init()
 	jwt.Init()
+
 }
 func main() {
 	Init()
@@ -43,7 +45,7 @@ func main() {
 	//NoHijackConnPool 将控制是否使用缓存池来获取/释放劫持连接。
 	//如果使用池，将提升内存资源分配的性能，但无法避免二次关闭连接导致的异常。
 	h.NoHijackConnPool = true
-	//go monitor.Manager.Listen()
+	go monitor.Manager.Listen()
 
 	register(h)
 	h.Spin()

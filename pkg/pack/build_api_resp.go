@@ -5,6 +5,7 @@ import (
 	"bibi/kitex_gen/base"
 	"bibi/pkg/errno"
 	"errors"
+	"github.com/bytedance/sonic"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
@@ -141,4 +142,28 @@ func ConvertToAPIComments(kitexComments []*base.Comment) []*api.Comment {
 		commentsResp[i] = ConvertToAPIComment(v)
 	}
 	return commentsResp
+}
+
+func BuildWsBaseResp(err errno.ErrNo) []byte {
+	baseResp := BuildBaseResp(err)
+	resp, _ := sonic.Marshal(baseResp)
+	return resp
+}
+
+func ConvertToAPIMessage(kitexMessage *base.Message) *api.Message {
+	return &api.Message{
+		ID:         kitexMessage.Id,
+		TargetID:   kitexMessage.TargetId,
+		FromID:     kitexMessage.FromId,
+		Content:    kitexMessage.Content,
+		CreateTime: kitexMessage.CreateTime,
+	}
+}
+
+func ConvertToAPIMessages(kitexMessages []*base.Message) []*api.Message {
+	messagesResp := make([]*api.Message, len(kitexMessages))
+	for i, v := range kitexMessages {
+		messagesResp[i] = ConvertToAPIMessage(v)
+	}
+	return messagesResp
 }

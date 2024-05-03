@@ -20,7 +20,7 @@ env-up:
 env-down:
 	docker-compose down
 
-SERVICES := api user video interaction follow
+SERVICES := api user video interaction follow chat
 service = $(word 1, $@)
 .PHONY: ${SERVICES}
 $(SERVICES):
@@ -33,7 +33,7 @@ build-all:
 	sh start.sh
 
 
-KSERVICES := user video interaction follow
+KSERVICES := user video interaction follow chat
 .PHONY: kgen
 kgen:
 	@for kservice in $(KSERVICES); do \

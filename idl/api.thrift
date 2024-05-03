@@ -269,3 +269,40 @@ service FollowHandler{
     FollowingListResponse FollowingList(1:FollowingListRequest req)(api.get="/bibi/follow/following"),
     FriendListResponse FriendList(1:FriendListRequest req)(api.get="/bibi/follow/friend"),
 }
+
+//chat
+struct Message{
+    1:i64 id,
+    2:i64 target_id,
+    3:i64 from_id,
+    4:string content,
+    5:string create_time,
+}
+
+struct MessageChatRequest{
+    1:required i64 target_id,
+}
+
+struct MessageChatResponse{
+    1:BaseResp base,
+}
+
+struct MessageRecordRequest{
+    1:required i64 target_id,
+    2:required string from_time,
+    3:required string to_time,
+    4:required i64 action_type,//todo:群聊
+    5:required i64 page_num,
+}
+
+struct MessageRecordResponse{
+    1:BaseResp base,
+    2:i64 message_count,
+    3:list<Message> record,
+}
+
+
+service ChatHandler{
+    MessageChatResponse Chat(1: MessageChatRequest req) (api.get="/bibi/message/ws"),
+    MessageRecordResponse MessageRecord(1: MessageRecordRequest req) (api.get="/bibi/message/record"),
+}

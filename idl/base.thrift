@@ -37,3 +37,11 @@ struct Video{
     9:i64 is_like,
     10:string publish_time,
 }
+
+struct Message{
+    1:i64 id,
+    2:i64 target_id,
+    3:i64 from_id,
+    4:string content,
+    5:string create_time,
+}
