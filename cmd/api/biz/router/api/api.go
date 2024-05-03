@@ -45,6 +45,11 @@ func Register(r *server.Hertz) {
 			}
 		}
 		{
+			_message := _bibi.Group("/message", _messageMw()...)
+			_message.GET("/record", append(_messagerecordMw(), api.MessageRecord)...)
+			_message.GET("/ws", append(_chatMw(), api.Chat)...)
+		}
+		{
 			_user := _bibi.Group("/user", _userMw()...)
 			_user.GET("/info", append(_infoMw(), api.Info)...)
 			_user.POST("/switch2fa", append(_switch2faMw(), api.Switch2FA)...)

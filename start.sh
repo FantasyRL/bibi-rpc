@@ -17,5 +17,9 @@ sleep 2s
 printf "\n"
 
 (go run ./cmd/follow) &
+sleep 2s
+printf "\n"
+
+(go run ./cmd/chat) &
 
 wait

@@ -247,6 +247,49 @@ paths:
       - application/json
       responses: {}
       summary: like_list
+  /bibi/message/record:
+    get:
+      consumes:
+      - json/form
+      description: get message record
+      parameters:
+      - description: 目标id
+        in: query
+        name: target_id
+        required: true
+        type: integer
+      - description: "2024-02-29"
+        in: query
+        name: from_time
+        required: true
+        type: string
+      - description: "2024-03-01"
+        in: query
+        name: to_time
+        required: true
+        type: string
+      - description: "1"
+        in: query
+        name: action_type
+        required: true
+        type: integer
+      - description: "1"
+        in: query
+        name: page_num
+        required: true
+        type: integer
+      - description: access-token
+        in: header
+        name: access-token
+        type: string
+      - description: refresh-token
+        in: header
+        name: refresh-token
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: message_record
   /bibi/user/avatar/upload:
     put:
       consumes:

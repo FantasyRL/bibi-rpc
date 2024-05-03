@@ -11,6 +11,10 @@ func InitMysqlDSN() string {
 
 }
 
+func InitRabbitMQDSN() string {
+	return strings.Join([]string{"amqp://", config.RabbitMQ.User, ":", config.RabbitMQ.Password, "@", config.RabbitMQ.Addr, "/"}, "")
+}
+
 func AddrCheck(addr string) bool {
 	l, err := net.Listen("tcp", addr)
 
