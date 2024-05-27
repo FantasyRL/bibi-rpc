@@ -4,9 +4,11 @@ package api
 
 import (
 	"bibi/cmd/api/biz/rpc"
-	"bibi/kitex_gen/user"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
+
+	"bibi/kitex_gen/user"
+
 	"context"
 	"path/filepath"
 
@@ -101,7 +103,9 @@ func Info(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.InfoResponse)
 
-	rpcResp, err := rpc.UserInfo(ctx, &user.InfoRequest{})
+	rpcResp, err := rpc.UserInfo(ctx, &user.InfoRequest{
+		req.UserID,
+	})
 	if err != nil {
 		pack.SendRPCFailResp(c, err)
 		return

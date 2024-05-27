@@ -31,13 +31,12 @@ _testmain.go
 .DS_Store
 /.idea
 /.vscode
-/output
+#/output
 *.local.yml
 dumped_hertz_remote_config.json
-/cmd/*/output
+
 /data
 hz_update.sh
 kitex_update.sh
-/config/config.yaml
 /codeql
 analz.sarif

@@ -5,11 +5,13 @@ import (
 	"bibi/kitex_gen/video"
 	"bibi/kitex_gen/video/videohandler"
 	"bibi/pkg/constants"
+	"bibi/pkg/tracer"
 	"context"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
 	"github.com/cloudwego/kitex/pkg/retry"
 	etcd "github.com/kitex-contrib/registry-etcd"
+	opentracing "github.com/kitex-contrib/tracer-opentracing"
 )
 
 func InitVideoRPC() {
@@ -19,6 +21,7 @@ func InitVideoRPC() {
 		panic(err)
 	}
 
+	tracer.InitJaegerTracer(constants.VideoServiceName)
 	c, err := videohandler.NewClient(
 		constants.VideoServiceName,
 		client.WithMuxConnection(constants.MuxConnection),
@@ -26,6 +29,7 @@ func InitVideoRPC() {
 		client.WithConnectTimeout(constants.ConnectTimeout),
 		client.WithFailureRetry(retry.NewFailurePolicy()),
 		client.WithResolver(r),
+		client.WithSuite(opentracing.NewDefaultClientSuite()),
 		client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()),
 	)
 

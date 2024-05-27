@@ -54,6 +54,10 @@ type elasticsearch struct {
 	Host string
 }
 
+type jaeger struct {
+	Addr string
+}
+
 type config struct {
 	Server        server
 	MySQL         mySQL
@@ -63,4 +67,5 @@ type config struct {
 	OSS           oss
 	Email         email
 	ElasticSearch elasticsearch
+	Jaeger        jaeger
 }

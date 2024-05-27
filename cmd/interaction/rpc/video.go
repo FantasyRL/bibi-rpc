@@ -10,6 +10,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/loadbalance"
 	"github.com/cloudwego/kitex/pkg/retry"
 	etcd "github.com/kitex-contrib/registry-etcd"
+	opentracing "github.com/kitex-contrib/tracer-opentracing"
 )
 
 var videoClient videohandler.Client
@@ -28,6 +29,7 @@ func InitVideoRPC() {
 		client.WithConnectTimeout(constants.ConnectTimeout),
 		client.WithFailureRetry(retry.NewFailurePolicy()),
 		client.WithResolver(r),
+		client.WithSuite(opentracing.NewDefaultClientSuite()),
 		client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()),
 	)
 

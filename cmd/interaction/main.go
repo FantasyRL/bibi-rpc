@@ -6,6 +6,7 @@ import (
 	"bibi/config"
 	interaction "bibi/kitex_gen/interaction/interactionhandler"
 	"bibi/pkg/constants"
+	"bibi/pkg/tracer"
 	"bibi/pkg/utils"
 	"bibi/pkg/utils/eslogrus"
 	"crypto/tls"
@@ -18,6 +19,7 @@ import (
 	elastic "github.com/elastic/go-elasticsearch/v8"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	etcd "github.com/kitex-contrib/registry-etcd"
+	opentracing "github.com/kitex-contrib/tracer-opentracing"
 	"github.com/sirupsen/logrus"
 	"net"
 	"net/http"
@@ -36,7 +38,7 @@ func Init() {
 	InitEs()
 	klog.SetLevel(klog.LevelDebug)
 	klog.SetLogger(kitexlogrus.NewLogger(kitexlogrus.WithHook(EsHookLog())))
-
+	tracer.InitJaegerTracer(constants.UserServiceName)
 	rpc.InitVideoRPC()
 }
 
@@ -68,6 +70,7 @@ func main() {
 
 	svr := interaction.NewServer(interactionHandlerImpl, // 指定 Registry 与服务基本信息
 		server.WithRegistry(r),
+		server.WithSuite(opentracing.NewDefaultServerSuite()),
 		server.WithServiceAddr(serviceAddr),
 		server.WithServerBasicInfo(
 			&rpcinfo.EndpointBasicInfo{

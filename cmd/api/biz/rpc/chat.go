@@ -5,6 +5,8 @@ import (
 	"bibi/kitex_gen/chat"
 	"bibi/kitex_gen/chat/chathandler"
 	"bibi/pkg/constants"
+	opentracing "github.com/kitex-contrib/tracer-opentracing"
+
 	"context"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
@@ -26,6 +28,7 @@ func InitChatRPC() {
 		client.WithConnectTimeout(constants.ConnectTimeout),
 		client.WithFailureRetry(retry.NewFailurePolicy()),
 		client.WithResolver(r),
+		client.WithSuite(opentracing.NewDefaultClientSuite()),
 		client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()),
 	)
 

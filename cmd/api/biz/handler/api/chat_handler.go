@@ -8,6 +8,7 @@ import (
 	"bibi/kitex_gen/chat"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
+
 	"context"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/hertz-contrib/websocket"

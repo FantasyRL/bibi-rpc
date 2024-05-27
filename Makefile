@@ -6,6 +6,7 @@ API_PATH= $(DIR)/cmd/api
 SHELL=/bin/bash
 KITEX_GEN_PATH=$(DIR)/kitex_gen
 MODULE= bibi
+OUTPUT=$(DIR)/output
 
 .PHONY: init
 init:
@@ -28,10 +29,19 @@ $(SERVICES):
 
 
 
-.PHONY: build-all
-build-all:
+.PHONY: start-all
+start-all:
 	sh start.sh
 
+SERVICES := api user video interaction follow chat
+.PHONY: build-all
+build-all:
+	@for service in $(SERVICES); do \
+  		cd ${RPC};cd $$service; \
+  		echo "build $$service ..." && sh build.sh; \
+  		cd ${RPC}/$$service/output/bin/ && cp -r . ${OUTPUT}/$$service; \
+  		echo "done"; \
+  	done \
 
 KSERVICES := user video interaction follow chat
 .PHONY: kgen
