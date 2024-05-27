@@ -5,6 +5,7 @@ import (
 	"bibi/kitex_gen/interaction"
 	"bibi/kitex_gen/interaction/interactionhandler"
 	"context"
+	opentracing "github.com/kitex-contrib/tracer-opentracing"
 
 	"bibi/pkg/constants"
 	"github.com/cloudwego/kitex/client"
@@ -27,6 +28,7 @@ func InitInteractionRPC() {
 		client.WithConnectTimeout(constants.ConnectTimeout),
 		client.WithFailureRetry(retry.NewFailurePolicy()),
 		client.WithResolver(r),
+		client.WithSuite(opentracing.NewDefaultClientSuite()),
 		client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()),
 	)
 

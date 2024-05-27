@@ -16,6 +16,7 @@ var (
 	RabbitMQ      *rabbitMQ
 	Sender        *email
 	ElasticSearch *elasticsearch
+	Jaeger        *jaeger
 
 	runtimeViper = viper.New()
 )
@@ -52,6 +53,7 @@ func configMapping(serviceName string) {
 	OSS = &c.OSS
 	Sender = &c.Email
 	ElasticSearch = &c.ElasticSearch
+	Jaeger = &c.Jaeger
 
 	addrList := runtimeViper.GetStringSlice("services." + serviceName + ".addr")
 	Service = &service{

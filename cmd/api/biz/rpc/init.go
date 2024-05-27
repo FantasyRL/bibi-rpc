@@ -22,5 +22,4 @@ func Init() {
 	InitFollowRPC()
 	InitInteractionRPC()
 	InitChatRPC()
-
 }

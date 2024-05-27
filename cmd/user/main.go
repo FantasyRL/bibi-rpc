@@ -5,6 +5,7 @@ import (
 	"bibi/config"
 	user "bibi/kitex_gen/user/userhandler"
 	"bibi/pkg/constants"
+	"bibi/pkg/tracer"
 	"bibi/pkg/utils"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/limit"
@@ -12,19 +13,27 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/cloudwego/netpoll"
 	etcd "github.com/kitex-contrib/registry-etcd"
+	kopentracing "github.com/kitex-contrib/tracer-opentracing"
 	"log"
 )
 
 var listenAddr string
 
+//var GloTracer opentracing.Tracer
+
 func Init() {
 	config.Init(constants.UserServiceName)
 	dal.Init()
-
+	tracer.InitJaegerTracer(constants.UserServiceName)
+	//GloTracer = tracer.NewJaegerTracer(constants.UserServiceName, listenAddr)
 }
 
 func main() {
 	Init()
+	//kTracer, closer := tracer.InitJaegerTracer("kitex-server")
+	//defer closer.Close()
+	//opentracing.SetGlobalTracer(kTracer)
+
 	//注册到etcd
 	r, err := etcd.NewEtcdRegistry([]string{config.Etcd.Addr})
 	if err != nil {
@@ -57,6 +66,11 @@ func main() {
 	//那Impl携带一个Client就没用了
 
 	svr := user.NewServer(userHandlerImpl, // 指定 Registry 与服务基本信息
+		server.WithSuite(kopentracing.NewDefaultServerSuite()), //jaeger
+		//server.WithSuite(kopentracing.NewServerSuite(kTracer, func(c context.Context) string {
+		//	endpoint := rpcinfo.GetRPCInfo(c).From()
+		//	return endpoint.ServiceName() + "::" + endpoint.Method()
+		//})),
 		server.WithRegistry(r),
 		server.WithServiceAddr(serviceAddr),
 		server.WithServerBasicInfo(

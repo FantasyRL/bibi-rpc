@@ -4,10 +4,12 @@ import (
 	"bibi/cmd/api/biz/model/api"
 	"bibi/cmd/api/biz/rpc"
 	"bibi/config"
-	"bibi/kitex_gen/base"
-	"bibi/kitex_gen/user"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
+
+	"bibi/kitex_gen/base"
+	"bibi/kitex_gen/user"
+
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"

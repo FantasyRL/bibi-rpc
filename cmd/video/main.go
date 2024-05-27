@@ -6,6 +6,7 @@ import (
 	"bibi/config"
 	video "bibi/kitex_gen/video/videohandler"
 	"bibi/pkg/constants"
+	"bibi/pkg/tracer"
 	"bibi/pkg/utils"
 	"bibi/pkg/utils/eslogrus"
 	"crypto/tls"
@@ -18,6 +19,7 @@ import (
 	elastic "github.com/elastic/go-elasticsearch/v8"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	etcd "github.com/kitex-contrib/registry-etcd"
+	opentracing "github.com/kitex-contrib/tracer-opentracing"
 	"github.com/sirupsen/logrus"
 	"net"
 	"net/http"
@@ -36,7 +38,7 @@ func Init() {
 	InitEs()
 	klog.SetLevel(klog.LevelDebug)
 	klog.SetLogger(kitexlogrus.NewLogger(kitexlogrus.WithHook(EsHookLog())))
-
+	tracer.InitJaegerTracer(constants.VideoServiceName)
 	rpc.InitInteractionRPC()
 	rpc.InitUserRPC()
 }
@@ -66,6 +68,7 @@ func main() {
 	svr := video.NewServer(videoHandlerImpl,
 		server.WithRegistry(r),
 		server.WithServiceAddr(serviceAddr),
+		server.WithSuite(opentracing.NewDefaultServerSuite()),
 		server.WithServerBasicInfo(
 			&rpcinfo.EndpointBasicInfo{
 				ServiceName: constants.VideoServiceName,

@@ -44,9 +44,12 @@ func (s *UserHandlerImpl) Register(ctx context.Context, req *user.RegisterReques
 // Login implements the UserHandlerImpl interface.
 func (s *UserHandlerImpl) Login(ctx context.Context, req *user.LoginRequest) (resp *user.LoginResponse, err error) {
 	resp = new(user.LoginResponse)
-
+	//stTracer, closer := tracer.InitJaegerTracer("login")
+	//defer closer.Close()
+	//parentSpan := stTracer.StartSpan("handler")
+	//defer parentSpan.Finish()
+	//userResp, err := service.NewUserService(ctx).Login(req, stTracer, parentSpan)
 	userResp, err := service.NewUserService(ctx).Login(req)
-
 	resp.Base = pack.BuildBaseResp(err)
 	if err != nil {
 		return resp, nil

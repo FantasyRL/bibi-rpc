@@ -10,6 +10,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/loadbalance"
 	"github.com/cloudwego/kitex/pkg/retry"
 	etcd "github.com/kitex-contrib/registry-etcd"
+	kopentracing "github.com/kitex-contrib/tracer-opentracing"
 )
 
 func InitUserRPC() {
@@ -19,6 +20,10 @@ func InitUserRPC() {
 		panic(err)
 	}
 
+	//kTracer, kCloser := tracer.InitJaegerTracer("kitex-client")
+	//defer kCloser.Close()
+	//tracer.InitJaegerTracer("kitex-client")
+
 	c, err := userhandler.NewClient(
 		constants.UserServiceName,
 		client.WithMuxConnection(constants.MuxConnection),
@@ -26,6 +31,11 @@ func InitUserRPC() {
 		client.WithConnectTimeout(constants.ConnectTimeout),
 		client.WithFailureRetry(retry.NewFailurePolicy()),
 		client.WithResolver(r),
+		client.WithSuite(kopentracing.NewDefaultClientSuite()),
+		//client.WithSuite(kopentracing.NewClientSuite(kTracer, func(c context.Context) string {
+		//	endpoint := rpcinfo.GetRPCInfo(c).From()
+		//	return endpoint.ServiceName() + "::" + endpoint.Method()
+		//})), //jaeger
 		client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()),
 	)
 

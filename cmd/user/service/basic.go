@@ -22,18 +22,28 @@ func (s *UserService) Register(req *user.RegisterRequest) (*db.User, error) {
 	return db.Register(s.ctx, userModel)
 }
 
-func (s *UserService) Login(req *user.LoginRequest) (*db.User, error) {
+func (s *UserService) Login(req *user.LoginRequest /*, stTracer opentracing.Tracer, parentSpan opentracing.Span*/) (*db.User, error) {
 	userModel := &db.User{
 		UserName: req.Username,
 		Password: req.Password,
 	}
+	//childSpan1 := stTracer.StartSpan(
+	//	"mysql",
+	//	opentracing.ChildOf(parentSpan.Context()),
+	//)
 	userResp, err := db.Login(s.ctx, userModel)
 	if err != nil {
 		return nil, err
 	}
+	//childSpan1.Finish()
+	//childSpan2 := stTracer.StartSpan(
+	//	"otp",
+	//	opentracing.ChildOf(childSpan1.Context()),
+	//)
 	if userResp.Type2fa == 1 && !otp2fa.CheckTotp(*req.Otp, userResp.Otp) {
 		return nil, errno.Verify2FAError
 	}
+	//childSpan2.Finish()
 	return userResp, nil
 }
 

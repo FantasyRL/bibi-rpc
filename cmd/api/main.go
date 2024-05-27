@@ -8,9 +8,11 @@ import (
 	"bibi/cmd/api/biz/ws/monitor"
 	"bibi/config"
 	"bibi/pkg/constants"
+	"bibi/pkg/tracer"
 	"bibi/pkg/utils"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/kitex/pkg/klog"
+	hertztracer "github.com/hertz-contrib/tracer/hertz"
 )
 
 var listenAddr string
@@ -23,6 +25,9 @@ func Init() {
 }
 func main() {
 	Init()
+	//_, hCloser := tracer.InitApiTracer(constants.APIServiceName)
+	//defer hCloser.Close()
+	tracer.InitJaegerTracer(constants.APIServiceName)
 
 	//获取addr
 	for index, addr := range config.Service.AddrList {
@@ -38,8 +43,13 @@ func main() {
 	h := server.New(
 		server.WithHostPorts(listenAddr),
 		server.WithStreamBody(true),
+		server.WithTracer(hertztracer.NewDefaultTracer()),
 		server.WithMaxRequestBodySize(constants.MaxRequestBodySize), //最大字节数
+		//server.WithTracer(hertztracer.NewTracer(hTracer, func(c *app.RequestContext) string {
+		//	return listenAddr + "::" + c.FullPath()
+		//})), //jaeger
 	)
+	h.Use(hertztracer.ServerCtx()) //jaeger
 
 	//websocket
 	//NoHijackConnPool 将控制是否使用缓存池来获取/释放劫持连接。

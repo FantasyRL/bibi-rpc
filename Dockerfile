@@ -1,4 +1,4 @@
-FROM golang:latest AS builder
+FROM golang:1.22 AS builder
 LABEL authors="fanr"
 
 ENV TZ Asia/Shanghai
@@ -12,5 +12,6 @@ WORKDIR /app
 
 ADD . /app
 RUN go mod tidy
+#CMD ["go run","example"]
 RUN make build-all
 

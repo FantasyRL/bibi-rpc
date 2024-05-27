@@ -41,8 +41,8 @@ services:
     image: bitnami/etcd:3.5
     container_name: etcd
     ports:
-      - "2379:2379"
-      - "2380:2380"
+      - "2389:2379"
+      - "2390:2380"
     volumes:
       - ./data/etcd/data:/bitnami/etcd-data
     environment:
@@ -90,6 +90,32 @@ services:
       - ./data/kibana:/usr/share/kibana/data
     networks:
       - bibi
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    restart: always
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+      - "4318:4318"
+    environment:
+      - LOG_LEVEL=debug
+    network_mode: host
+
+#  hotrod:
+#    image: jaegertracing/example-hotrod:latest
+#    container_name: hotrod
+#    restart: always
+#    ports:
+#      - "8080:8080"
+#      - "8083:8083"
+#    command: [ "all", "--otel-exporter=otlp" ]
+#    environment:
+#      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+#    network_mode: host
+#    depends_on:
+#      - jaeger
 #  rabbitmq:
 #    image: rabbitmq:management
 #    container_name: rabbitmq
