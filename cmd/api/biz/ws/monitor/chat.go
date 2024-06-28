@@ -1,7 +1,7 @@
 package monitor
 
 import (
-	"bibi/cmd/api/biz/rpc"
+	"bibi/cmd/api/biz/rpc_client"
 	"bibi/cmd/api/biz/ws"
 	"bibi/kitex_gen/chat"
 	"bibi/pkg/errno"
@@ -72,7 +72,7 @@ func (c *Client) Write() {
 }
 
 func (c *Client) IfNotReadMessage(uid int64) error {
-	rpcResp, err := rpc.IsNotReadMessage(c.Ctx, &chat.IsNotReadMessageRequest{
+	rpcResp, err := rpc_client.IsNotReadMessage(c.Ctx, &chat.IsNotReadMessageRequest{
 		UserId: uid,
 	})
 	if err != nil {

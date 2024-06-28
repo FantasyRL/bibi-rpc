@@ -192,3 +192,8 @@ func _chatMw() []app.HandlerFunc {
 		jwt.JwtMiddleware.MiddlewareFunc(),
 	}
 }
+
+func _searchavatarMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

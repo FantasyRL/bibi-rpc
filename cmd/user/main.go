@@ -12,12 +12,15 @@ import (
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	"github.com/cloudwego/netpoll"
-	etcd "github.com/kitex-contrib/registry-etcd"
+	"github.com/kitex-contrib/registry-nacos/registry"
 	kopentracing "github.com/kitex-contrib/tracer-opentracing"
 	"log"
 )
 
-var listenAddr string
+var (
+	listenAddr string
+	lu         = new(LimiterUpdater)
+)
 
 //var GloTracer opentracing.Tracer
 
@@ -30,14 +33,11 @@ func Init() {
 
 func main() {
 	Init()
-	//kTracer, closer := tracer.InitJaegerTracer("kitex-server")
-	//defer closer.Close()
-	//opentracing.SetGlobalTracer(kTracer)
 
-	//注册到etcd
-	r, err := etcd.NewEtcdRegistry([]string{config.Etcd.Addr})
+	//nacos
+	r, err := registry.NewDefaultNacosRegistry()
 	if err != nil {
-		klog.Fatal(err)
+		panic(err)
 	}
 
 	//获取addr
@@ -66,21 +66,30 @@ func main() {
 	//那Impl携带一个Client就没用了
 
 	svr := user.NewServer(userHandlerImpl, // 指定 Registry 与服务基本信息
+		server.WithServerBasicInfo(
+			&rpcinfo.EndpointBasicInfo{
+				ServiceName: constants.UserServiceName,
+			}),
 		server.WithSuite(kopentracing.NewDefaultServerSuite()), //jaeger
 		//server.WithSuite(kopentracing.NewServerSuite(kTracer, func(c context.Context) string {
 		//	endpoint := rpcinfo.GetRPCInfo(c).From()
 		//	return endpoint.ServiceName() + "::" + endpoint.Method()
 		//})),
 		server.WithRegistry(r),
+		//server.WithSuite(nacosserver.NewSuite(constants.UserServiceName, nacosClient, cl)),
 		server.WithServiceAddr(serviceAddr),
-		server.WithServerBasicInfo(
-			&rpcinfo.EndpointBasicInfo{
-				ServiceName: constants.UserServiceName,
-			}),
-		server.WithLimit(&limit.Option{
-			MaxConnections: constants.MaxConnections,
-			MaxQPS:         constants.MaxQPS,
-		}))
+		//server.WithLimit(&limit.Option{
+		//	MaxConnections: constants.MaxConnections,
+		//	MaxQPS:         constants.MaxQPS,
+		//})
+		server.WithLimit(
+			&limit.Option{
+				MaxConnections: constants.MaxConnections,
+				MaxQPS:         constants.MaxQPS,
+				UpdateControl:  lu.UpdateControl,
+			},
+		),
+	)
 
 	err = svr.Run()
 

@@ -1,4 +1,4 @@
-package rpc
+package rpc_client
 
 import (
 	"bibi/kitex_gen/chat/chathandler"

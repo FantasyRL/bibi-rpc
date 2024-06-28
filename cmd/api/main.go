@@ -4,14 +4,17 @@ package main
 
 import (
 	"bibi/cmd/api/biz/mw/jwt"
-	"bibi/cmd/api/biz/rpc"
+	"bibi/cmd/api/biz/rpc_client"
 	"bibi/cmd/api/biz/ws/monitor"
 	"bibi/config"
 	"bibi/pkg/constants"
 	"bibi/pkg/tracer"
-	"bibi/pkg/utils"
+	myutils "bibi/pkg/utils"
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/app/server/registry"
+	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/hertz-contrib/registry/nacos/v2"
 	hertztracer "github.com/hertz-contrib/tracer/hertz"
 )
 
@@ -19,7 +22,8 @@ var listenAddr string
 
 func Init() {
 	config.Init(constants.APIServiceName)
-	rpc.Init()
+	tracer.InitJaegerTracer(constants.APIServiceName)
+	rpc_client.Init()
 	jwt.Init()
 
 }
@@ -27,27 +31,40 @@ func main() {
 	Init()
 	//_, hCloser := tracer.InitApiTracer(constants.APIServiceName)
 	//defer hCloser.Close()
-	tracer.InitJaegerTracer(constants.APIServiceName)
+	r, err := nacos.NewDefaultNacosRegistry(
+	//nacos.WithRegistryCluster(constants.ClusterName),
+	//nacos.WithRegistryGroup(constants.ClusterName),
+	)
+	if err != nil {
+		klog.Fatal(err)
+	}
 
 	//获取addr
 	for index, addr := range config.Service.AddrList {
-		if ok := utils.AddrCheck(addr); ok {
+		if ok := myutils.AddrCheck(addr); ok {
 			listenAddr = addr
 			break
 		}
-
 		if index == len(config.Service.AddrList)-1 {
 			klog.Fatal("not available addr")
 		}
 	}
+
 	h := server.New(
 		server.WithHostPorts(listenAddr),
 		server.WithStreamBody(true),
+		server.WithRegistry(r, &registry.Info{
+			ServiceName: "hertz.api.demo",
+			Addr:        utils.NewNetAddr("tcp", listenAddr),
+			Weight:      10,
+			Tags:        nil,
+		}),
 		server.WithTracer(hertztracer.NewDefaultTracer()),
-		server.WithMaxRequestBodySize(constants.MaxRequestBodySize), //最大字节数
 		//server.WithTracer(hertztracer.NewTracer(hTracer, func(c *app.RequestContext) string {
 		//	return listenAddr + "::" + c.FullPath()
 		//})), //jaeger
+		server.WithMaxRequestBodySize(constants.MaxRequestBodySize), //最大字节数
+
 	)
 	h.Use(hertztracer.ServerCtx()) //jaeger
 

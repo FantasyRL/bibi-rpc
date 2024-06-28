@@ -9,11 +9,19 @@ type server struct {
 type service struct {
 	Name     string
 	AddrList []string
-	LB       bool `mapstructure:"load-balance"`
 }
 
 type etcd struct {
 	Addr string
+}
+
+type nacos struct {
+	Host        string
+	Port        string
+	DataId      string
+	GroupName   string
+	NamespaceId string
+	ConfigType  string
 }
 
 type mySQL struct {
@@ -58,6 +66,10 @@ type jaeger struct {
 	Addr string
 }
 
+type milvus struct {
+	Addr string
+}
+
 type config struct {
 	Server        server
 	MySQL         mySQL
@@ -68,4 +80,6 @@ type config struct {
 	Email         email
 	ElasticSearch elasticsearch
 	Jaeger        jaeger
+	Nacos         nacos
+	Milvus        milvus
 }
