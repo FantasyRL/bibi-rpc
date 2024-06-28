@@ -3,7 +3,7 @@
 package api
 
 import (
-	"bibi/cmd/api/biz/rpc"
+	"bibi/cmd/api/biz/rpc_client"
 	"bibi/cmd/api/biz/ws/monitor"
 	"bibi/kitex_gen/chat"
 	"bibi/pkg/errno"
@@ -102,7 +102,7 @@ func MessageRecord(ctx context.Context, c *app.RequestContext) {
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
 
-	rpcResp, err := rpc.MessageRecord(ctx, &chat.MessageRecordRequest{
+	rpcResp, err := rpc_client.MessageRecord(ctx, &chat.MessageRecordRequest{
 		TargetId:   req.TargetID,
 		FromTime:   req.FromTime,
 		ToTime:     req.ToTime,

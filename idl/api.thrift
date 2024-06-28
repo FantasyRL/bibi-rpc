@@ -79,12 +79,24 @@ struct InfoResponse {
 }
 
 struct AvatarRequest{
-    1:required binary avatar_file,
+    1:binary avatar_file,
 }
 struct AvatarResponse{
     1: BaseResp base,
     2: optional User user,
 }
+
+struct SearchAvatarRequest{
+    1: required i64 dim, // 向量维数
+    2: required list<double> vector,
+    3: required i64 page_num,
+}
+
+struct SearchAvatarResponse{
+    1: required BaseResp base,
+    2: optional list<string> avatar,
+}
+
 service UserHandler {
     RegisterResponse Register(1: RegisterRequest req)(api.post="/bibi/user/register/"),
     LoginResponse Login(1: LoginRequest req)(api.post="/bibi/user/login/"),
@@ -92,6 +104,7 @@ service UserHandler {
     AvatarResponse Avatar(1:AvatarRequest req)(api.put="/bibi/user/avatar/upload"),
 //    OTP2FAResp OTP2FA(1:OTP2FAReq req)(api.get="/bibi/user/2fa"),
     Switch2FAResponse Switch2FA(1:Switch2FARequest req)(api.post="/bibi/user/switch2fa"),
+    SearchAvatarResponse SearchAvatar(1:SearchAvatarRequest req)(api.post="/bibi/user/avatar/search"),
     GetAccessTokenResponse GetAccessToken(1:GetAccessTokenRequest req)(api.get="/bibi/access_token/get")
 }
 
@@ -110,9 +123,9 @@ struct Video{
 }
 
 struct PutVideoRequest{
-    1:required binary video_file,
+    1:binary video_file,
     2:required string title,
-    3:required binary cover,
+    3:binary cover,
 }
 
 struct PutVideoResponse{

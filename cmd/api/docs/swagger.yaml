@@ -290,6 +290,9 @@ paths:
       - application/json
       responses: {}
       summary: message_record
+  /bibi/user/avatar/search:
+    post:
+      responses: {}
   /bibi/user/avatar/upload:
     put:
       consumes:

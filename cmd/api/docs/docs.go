@@ -439,6 +439,11 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/bibi/user/avatar/search": {
+            "post": {
+                "responses": {}
+            }
+        },
         "/bibi/user/avatar/upload": {
             "put": {
                 "description": "revise user's avatar",

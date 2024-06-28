@@ -23,7 +23,7 @@ make build-all
 
 目录树生成:
 ```bash
-treer -e tree.txt -i "/.idea|.git|data/"
+treer -e tree.txt -i "/.idea|.git|data|codeql|(.*)?elasticsearch|(.*)?kibana/"
 ```
 
 ## Todo...

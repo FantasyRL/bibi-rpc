@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 networks:
   bibi:
@@ -7,6 +7,7 @@ networks:
 services:
   mysql:
     image: mysql:8.0.36
+#    image: registry.cn-hangzhou.aliyuncs.com/fanr/mysql:8.0.36
     container_name: bibi
     volumes:
       - ./config/sql:/docker-entrypoint-initdb.d
@@ -22,7 +23,6 @@ services:
     restart: always
     networks:
       - bibi
-
   redis:
     image: redis:6.0.16
     container_name: redis
@@ -36,9 +36,9 @@ services:
     networks:
       - bibi
 
-
   etcd:
     image: bitnami/etcd:3.5
+#    image: registry.cn-hangzhou.aliyuncs.com/fanr/etcd:3.5
     container_name: etcd
     ports:
       - "2389:2379"
@@ -49,12 +49,42 @@ services:
       - TZ=Asia/Shanghai
       - ALLOW_NONE_AUTHENTICATION=yes
       - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    healthcheck:
+      test: [ "CMD", "etcdctl", "endpoint", "health" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
     networks:
       - bibi
 
+  nacos:
+#    如果哪天连不上了，就是env里mysqlIP要改了，傻逼校园网
+    image: nacos/nacos-server:v2.3.2
+#    image: registry.cn-hangzhou.aliyuncs.com/fanr/nacos-server:v2.3.2
+    container_name: nacos
+    env_file:
+      - ./config/nacos/nacos-standlone-mysql.env
+    volumes:
+      - ./data/nacos/standalone-logs/:/nacos/logs
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    restart: always
+    network_mode: host
+#    networks:
+#      - bibi
+
   elasticsearch:
-    image: elasticsearch:8.12.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
     container_name: elasticsearch
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 20M
     environment:
       xpack.security.enabled: "false"
       ES_JAVA_OPTS: "-Xms512m -Xmx512m" # 加大内存设置
@@ -75,7 +105,7 @@ services:
       - bibi
 
   kibana:
-    image: kibana:8.12.2
+    image: docker.elastic.co/kibana/kibana:8.12.2
     container_name: kibana
     environment:
       - XPACK_GRAPH_ENABLED=true
@@ -133,3 +163,50 @@ services:
 #      - ./config/rabbitmq:/etc/rabbitmq
 #    networks:
 #      - bibi
+  minio:
+    container_name: milvus-minio
+    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+#    image: registry.cn-hangzhou.aliyuncs.com/fanr/minio:RELEASE.2023-03-20T20-16-18Z
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9001:9001"
+      - "9000:9000"
+    volumes:
+      - ./data/minio:/minio_data
+    command: minio server /minio_data --console-address ":9001"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - bibi
+
+  standalone:
+    container_name: milvus-standalone
+    image: milvusdb/milvus:v2.4.4
+#    image: registry.cn-hangzhou.aliyuncs.com/fanr/milvus:v2.4.4
+    command: [ "milvus", "run", "standalone" ]
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+    volumes:
+      - ./data/milvus:/var/lib/milvus
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9091/healthz" ]
+      interval: 30s
+      start_period: 90s
+      timeout: 20s
+      retries: 3
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    depends_on:
+      - "etcd"
+      - "minio"
+    networks:
+      - bibi

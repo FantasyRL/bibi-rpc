@@ -41,3 +41,4 @@ kitex_update.sh
 /config/config.yaml
 /codeql
 analz.sarif
+cache

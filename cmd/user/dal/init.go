@@ -6,6 +6,6 @@ import (
 )
 
 func Init() {
-	db.Init()
+	db.InitMySQL()
 	cache.Init()
 }

@@ -55,6 +55,7 @@ func Register(r *server.Hertz) {
 			_user.POST("/switch2fa", append(_switch2faMw(), api.Switch2FA)...)
 			{
 				_avatar := _user.Group("/avatar", _avatarMw()...)
+				_avatar.POST("/search", append(_searchavatarMw(), api.SearchAvatar)...)
 				_avatar.PUT("/upload", append(_avatar0Mw(), api.Avatar)...)
 			}
 			{

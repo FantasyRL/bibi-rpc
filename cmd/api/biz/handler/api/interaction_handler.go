@@ -4,7 +4,7 @@ package api
 
 import (
 	api "bibi/cmd/api/biz/model/api"
-	"bibi/cmd/api/biz/rpc"
+	"bibi/cmd/api/biz/rpc_client"
 	"bibi/kitex_gen/interaction"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
@@ -37,7 +37,7 @@ func LikeAction(ctx context.Context, c *app.RequestContext) {
 
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
-	rpcResp, err := rpc.LikeAction(ctx, &interaction.LikeActionRequest{
+	rpcResp, err := rpc_client.LikeAction(ctx, &interaction.LikeActionRequest{
 		VideoId:    req.VideoID,
 		CommentId:  req.CommentID,
 		ActionType: req.ActionType,
@@ -69,7 +69,7 @@ func LikeList(ctx context.Context, c *app.RequestContext) {
 
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
-	rpcResp, err := rpc.LikedVideoList(ctx, &interaction.LikeListRequest{
+	rpcResp, err := rpc_client.LikedVideoList(ctx, &interaction.LikeListRequest{
 		PageNum: req.PageNum,
 		UserId:  id,
 	})
@@ -109,7 +109,7 @@ func CommentCreate(ctx context.Context, c *app.RequestContext) {
 
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
-	rpcResp, err := rpc.CommentCreate(ctx, &interaction.CommentCreateRequest{
+	rpcResp, err := rpc_client.CommentCreate(ctx, &interaction.CommentCreateRequest{
 		VideoId:  req.VideoID,
 		ParentId: req.ParentID,
 		Content:  req.Content,
@@ -142,7 +142,7 @@ func CommentDelete(ctx context.Context, c *app.RequestContext) {
 
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
-	rpcResp, err := rpc.CommentDelete(ctx, &interaction.CommentDeleteRequest{
+	rpcResp, err := rpc_client.CommentDelete(ctx, &interaction.CommentDeleteRequest{
 		VideoId:   req.VideoID,
 		CommentId: req.CommentID,
 		UserId:    id,
@@ -170,7 +170,7 @@ func CommentList(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.CommentListResponse)
 
-	rpcResp, err := rpc.CommentList(ctx, &interaction.CommentListRequest{
+	rpcResp, err := rpc_client.CommentList(ctx, &interaction.CommentListRequest{
 		VideoId: req.VideoID,
 		PageNum: req.PageNum,
 	})

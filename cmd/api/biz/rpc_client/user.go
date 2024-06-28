@@ -1,21 +1,28 @@
-package rpc
+package rpc_client
 
 import (
-	"bibi/config"
 	"bibi/kitex_gen/user"
 	"bibi/kitex_gen/user/userhandler"
 	"bibi/pkg/constants"
 	"context"
 	"github.com/cloudwego/kitex/client"
+	"github.com/cloudwego/kitex/pkg/circuitbreak"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
 	"github.com/cloudwego/kitex/pkg/retry"
-	etcd "github.com/kitex-contrib/registry-etcd"
+	"github.com/cloudwego/kitex/pkg/rpcinfo"
+	"github.com/kitex-contrib/registry-nacos/resolver"
+
+	//etcd "github.com/kitex-contrib/registry-etcd"
 	kopentracing "github.com/kitex-contrib/tracer-opentracing"
 )
 
-func InitUserRPC() {
-	r, err := etcd.NewEtcdResolver([]string{config.Etcd.Addr})
+func GenServiceCBKeyFunc(ri rpcinfo.RPCInfo) string {
+	// circuitbreak.RPCInfo2Key returns "$fromServiceName/$toServiceName/$method"
+	return circuitbreak.RPCInfo2Key(ri)
+}
 
+func InitUserRPC() {
+	r, err := resolver.NewDefaultNacosResolver()
 	if err != nil {
 		panic(err)
 	}
@@ -23,6 +30,11 @@ func InitUserRPC() {
 	//kTracer, kCloser := tracer.InitJaegerTracer("kitex-client")
 	//defer kCloser.Close()
 	//tracer.InitJaegerTracer("kitex-client")
+	//nacosClient, err := nacos.NewClient(nacos.Options{
+	//	NamespaceID: constants.APIServiceName,
+	//})
+	// build a new CBSuite with
+	cbs := circuitbreak.NewCBSuite(GenServiceCBKeyFunc)
 
 	c, err := userhandler.NewClient(
 		constants.UserServiceName,
@@ -31,13 +43,22 @@ func InitUserRPC() {
 		client.WithConnectTimeout(constants.ConnectTimeout),
 		client.WithFailureRetry(retry.NewFailurePolicy()),
 		client.WithResolver(r),
+		//client.WithSuite(nacosclient.NewSuite(constants.UserServiceName, constants.APIServiceName, nacosClient)),
 		client.WithSuite(kopentracing.NewDefaultClientSuite()),
 		//client.WithSuite(kopentracing.NewClientSuite(kTracer, func(c context.Context) string {
 		//	endpoint := rpcinfo.GetRPCInfo(c).From()
 		//	return endpoint.ServiceName() + "::" + endpoint.Method()
 		//})), //jaeger
 		client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()),
+		client.WithCircuitBreaker(cbs), // add CBSuite to the client options
 	)
+	// update circuit breaker config for a certain key (should be consistent with GenServiceCBKeyFunc)
+	// this can be called at any time, and will take effect for following requests
+	cbs.UpdateServiceCBConfig("fromServiceName/toServiceName/method", circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3, // requests will be blocked if error rate >= 30%
+		MinSample: 200, // this config takes effect if sampled requests are more than `MinSample`
+	})
 
 	if err != nil {
 		panic(err)

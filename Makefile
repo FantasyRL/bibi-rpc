@@ -39,9 +39,11 @@ build-all:
 	@for service in $(SERVICES); do \
   		cd ${RPC};cd $$service; \
   		echo "build $$service ..." && sh build.sh; \
-  		cd ${RPC}/$$service/output/bin/ && cp -r . ${OUTPUT}/$$service; \
+#  		cd ${RPC}/$$service/output/bin/ && cp -r . ${OUTPUT}/$$service; \
   		echo "done"; \
-  	done \
+  	done ; \
+#  	cd ${OUTPUT}/api; \
+#  	mv hertz_service api;
 
 KSERVICES := user video interaction follow chat
 .PHONY: kgen

@@ -23,6 +23,8 @@ const (
 	// limit
 	MaxConnections     = 1000
 	MaxQPS             = 100
+	UpdateConnections  = 2000
+	UpdateQPS          = 200
 	MaxRequestBodySize = 114514 * 1024 * 1024
 	MaxIdleConns       = 20
 	MaxGoroutines      = 10
@@ -37,6 +39,7 @@ const (
 
 const (
 	ElasticSearchIndexName = "bibi"
+	ClusterName            = "bibi"
 
 	// page
 	PageNum  = 1

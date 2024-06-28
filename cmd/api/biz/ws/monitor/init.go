@@ -1,7 +1,7 @@
 package monitor
 
 import (
-	"bibi/cmd/api/biz/rpc"
+	"bibi/cmd/api/biz/rpc_client"
 	"bibi/cmd/api/biz/ws"
 	"bibi/kitex_gen/chat"
 	"bibi/pkg/errno"
@@ -51,7 +51,7 @@ func (manager *ClientManager) Listen() {
 				var replyMsg ws.ReplyMsg
 				_, _ = replyMsg.UnmarshalMsg(marshalMsg)
 
-				rpcResp, err := rpc.MessageSave(broadcast.Client.Ctx, &chat.MessageSaveRequest{
+				rpcResp, err := rpc_client.MessageSave(broadcast.Client.Ctx, &chat.MessageSaveRequest{
 					TargetId: targetId,
 					UserId:   replyMsg.From,
 					Content:  replyMsg.Content,

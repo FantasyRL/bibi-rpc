@@ -1,7 +1,6 @@
 package rpc
 
 import (
-	"bibi/config"
 	"bibi/kitex_gen/user"
 	"bibi/kitex_gen/user/userhandler"
 	"bibi/pkg/constants"
@@ -9,13 +8,16 @@ import (
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
 	"github.com/cloudwego/kitex/pkg/retry"
-	etcd "github.com/kitex-contrib/registry-etcd"
+	"github.com/kitex-contrib/registry-nacos/resolver"
 )
 
 var userClient userhandler.Client
 
 func InitUserRPC() {
-	r, err := etcd.NewEtcdResolver([]string{config.Etcd.Addr})
+	r, err := resolver.NewDefaultNacosResolver()
+	if err != nil {
+		panic(err)
+	}
 
 	if err != nil {
 		panic(err)

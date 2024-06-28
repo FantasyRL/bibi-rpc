@@ -17,7 +17,7 @@ import (
 	"github.com/cloudwego/netpoll"
 	elastic "github.com/elastic/go-elasticsearch/v8"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
-	etcd "github.com/kitex-contrib/registry-etcd"
+	"github.com/kitex-contrib/registry-nacos/registry"
 	"github.com/sirupsen/logrus"
 	"net"
 	"net/http"
@@ -43,11 +43,10 @@ func Init() {
 func main() {
 	Init()
 	//注册到etcd
-	r, err := etcd.NewEtcdRegistry([]string{config.Etcd.Addr})
+	r, err := registry.NewDefaultNacosRegistry()
 	if err != nil {
-		klog.Fatal(err)
+		panic(err)
 	}
-
 	//获取addr
 	for index, addr := range config.Service.AddrList {
 		if ok := utils.AddrCheck(addr); ok {

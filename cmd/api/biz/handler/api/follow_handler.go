@@ -3,7 +3,7 @@
 package api
 
 import (
-	"bibi/cmd/api/biz/rpc"
+	"bibi/cmd/api/biz/rpc_client"
 	"bibi/kitex_gen/follow"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
@@ -42,7 +42,7 @@ func FollowAction(ctx context.Context, c *app.RequestContext) {
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-	rpcResp, err := rpc.FollowAction(ctx, &follow.FollowActionRequest{
+	rpcResp, err := rpc_client.FollowAction(ctx, &follow.FollowActionRequest{
 		ObjectUid:  req.ObjectUID,
 		ActionType: req.ActionType,
 		UserId:     id,
@@ -76,7 +76,7 @@ func FollowerList(ctx context.Context, c *app.RequestContext) {
 
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
-	rpcResp, err := rpc.FollowerList(ctx, &follow.FollowerListRequest{
+	rpcResp, err := rpc_client.FollowerList(ctx, &follow.FollowerListRequest{
 		PageNum: req.PageNum,
 		UserId:  id,
 	})
@@ -114,7 +114,7 @@ func FollowingList(ctx context.Context, c *app.RequestContext) {
 
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
-	rpcResp, err := rpc.FollowingList(ctx, &follow.FollowingListRequest{
+	rpcResp, err := rpc_client.FollowingList(ctx, &follow.FollowingListRequest{
 		PageNum: req.PageNum,
 		UserId:  id,
 	})
@@ -152,7 +152,7 @@ func FriendList(ctx context.Context, c *app.RequestContext) {
 
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
-	rpcResp, err := rpc.FriendList(ctx, &follow.FriendListRequest{
+	rpcResp, err := rpc_client.FriendList(ctx, &follow.FriendListRequest{
 		PageNum: req.PageNum,
 		UserId:  id,
 	})

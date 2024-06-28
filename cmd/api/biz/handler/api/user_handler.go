@@ -3,7 +3,7 @@
 package api
 
 import (
-	"bibi/cmd/api/biz/rpc"
+	"bibi/cmd/api/biz/rpc_client"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
 
@@ -37,7 +37,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.RegisterResponse)
 
-	rpcResp, err := rpc.UserRegister(ctx, &user.RegisterRequest{
+	rpcResp, err := rpc_client.UserRegister(ctx, &user.RegisterRequest{
 		Username: req.Username,
 		Email:    req.Email,
 		Password: req.Password,
@@ -103,8 +103,8 @@ func Info(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.InfoResponse)
 
-	rpcResp, err := rpc.UserInfo(ctx, &user.InfoRequest{
-		req.UserID,
+	rpcResp, err := rpc_client.UserInfo(ctx, &user.InfoRequest{
+		UserId: req.UserID,
 	})
 	if err != nil {
 		pack.SendRPCFailResp(c, err)
@@ -166,7 +166,7 @@ func Avatar(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	rpcResp, err := rpc.UserAvatar(ctx, &user.AvatarRequest{
+	rpcResp, err := rpc_client.UserAvatar(ctx, &user.AvatarRequest{
 		UserId:     id,
 		AvatarFile: fileBinary,
 	})
@@ -211,7 +211,7 @@ func Switch2FA(ctx context.Context, c *app.RequestContext) {
 	v, _ := c.Get("current_user_id")
 	id, _ := v.(int64)
 
-	rpcResp, err := rpc.UserSwitch2FA(ctx, &user.Switch2FARequest{
+	rpcResp, err := rpc_client.UserSwitch2FA(ctx, &user.Switch2FARequest{
 		UserId:     id,
 		ActionType: req.ActionType,
 		Totp:       req.Totp,
@@ -242,6 +242,22 @@ func GetAccessToken(ctx context.Context, c *app.RequestContext) {
 	v2, _ := c.Get("access-token")
 	at := v2.(string)
 	resp.AccessToken = &at
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// SearchAvatar .
+// @router /bibi/user/avatar/search [POST]
+func SearchAvatar(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.SearchAvatarRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.SearchAvatarResponse)
 
 	c.JSON(consts.StatusOK, resp)
 }

@@ -1,7 +1,6 @@
-package rpc
+package rpc_client
 
 import (
-	"bibi/config"
 	"bibi/kitex_gen/video"
 	"bibi/kitex_gen/video/videohandler"
 	"bibi/pkg/constants"
@@ -10,12 +9,15 @@ import (
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
 	"github.com/cloudwego/kitex/pkg/retry"
-	etcd "github.com/kitex-contrib/registry-etcd"
+	"github.com/kitex-contrib/registry-nacos/resolver"
 	opentracing "github.com/kitex-contrib/tracer-opentracing"
 )
 
 func InitVideoRPC() {
-	r, err := etcd.NewEtcdResolver([]string{config.Etcd.Addr})
+	r, err := resolver.NewDefaultNacosResolver()
+	if err != nil {
+		panic(err)
+	}
 
 	if err != nil {
 		panic(err)

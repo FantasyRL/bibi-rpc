@@ -3,7 +3,7 @@
 package api
 
 import (
-	"bibi/cmd/api/biz/rpc"
+	"bibi/cmd/api/biz/rpc_client"
 	"bibi/kitex_gen/video"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
@@ -84,7 +84,7 @@ func PutVideo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	rpcResp, err := rpc.VideoUpload(ctx, &video.PutVideoRequest{
+	rpcResp, err := rpc_client.VideoUpload(ctx, &video.PutVideoRequest{
 		UserId:    id,
 		VideoFile: videoByte,
 		Title:     req.Title,
@@ -119,7 +119,7 @@ func ListVideo(ctx context.Context, c *app.RequestContext) {
 
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
-	rpcResp, err := rpc.UserVideoList(ctx, &video.ListUserVideoRequest{
+	rpcResp, err := rpc_client.UserVideoList(ctx, &video.ListUserVideoRequest{
 		UserId:  id,
 		PageNum: req.PageNum,
 	})
@@ -156,7 +156,7 @@ func SearchVideo(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(api.SearchVideoResponse)
 
-	rpcResp, err := rpc.VideoSearch(ctx, &video.SearchVideoRequest{
+	rpcResp, err := rpc_client.VideoSearch(ctx, &video.SearchVideoRequest{
 		PageNum: req.PageNum,
 		Param:   req.Param,
 	})

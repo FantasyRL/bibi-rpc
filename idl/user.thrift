@@ -72,6 +72,18 @@ struct GetUsersResponse{
     2:list<base.User> user_list,
 }
 
+struct SearchAvatarRequest{
+    1: required i64 dim, // 向量维数
+    2: required list<double> vector,
+    3: required i64 page_num,
+}
+
+struct SearchAvatarResponse{
+    1: required base.BaseResp base,
+    2: optional list<string> avatar,
+}
+
+
 service UserHandler {
     RegisterResponse Register(1: RegisterRequest req)(api.post="/bibi/user/register/"),
     LoginResponse Login(1: LoginRequest req)(api.post="/bibi/user/login/"),
@@ -79,6 +91,6 @@ service UserHandler {
     AvatarResponse Avatar(1:AvatarRequest req)(api.put="/bibi/user/avatar/upload"),
 //    OTP2FAResp OTP2FA(1:OTP2FAReq req)(api.get="/bibi/user/2fa"),
     Switch2FAResponse Switch2FA(1:Switch2FARequest req)(api.post="/bibi/user/switch2fa"),
-
+    SearchAvatarResponse SearchAvatar(1:SearchAvatarRequest req)(api.post="/bibi/user/avatar/search"),
     GetUsersResponse GetUserList(1:GetUsersRequest req),
 }

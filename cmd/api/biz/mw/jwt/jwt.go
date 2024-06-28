@@ -2,7 +2,7 @@ package jwt
 
 import (
 	"bibi/cmd/api/biz/model/api"
-	"bibi/cmd/api/biz/rpc"
+	"bibi/cmd/api/biz/rpc_client"
 	"bibi/config"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
@@ -46,7 +46,7 @@ func Init() {
 				return nil, err
 			}
 
-			rpcResp, err := rpc.UserLogin(ctx, &user.LoginRequest{
+			rpcResp, err := rpc_client.UserLogin(ctx, &user.LoginRequest{
 				Username: req.Username,
 				Password: req.Password,
 			})
