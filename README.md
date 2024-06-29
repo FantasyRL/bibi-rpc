@@ -2,19 +2,7 @@
 
 **bibi-demo** is a small video website backend using hertz(hz-gen、jwt、websocket)+gorm(mysql)+redis+oss(aliyun)
 
-## deploy by host(net=host)
-
-(由于非常的不会shell，所以build-all很没道理，暂时不会用docker启动rpc)
-`快速启动`
-```bash
-#oss与email的配置需自行填写
-make init
-make env-up
-make build-all
-```
-
-使用：将docs/swagger.* 丢到apifox/postman，然后就能用了
-
+文档链接:https://gvyad0298ie.feishu.cn/docx/SKECdKuyToFeVNxU8zMcy5Smnxg?from=from_copylink
 
 
 ## Recent:
