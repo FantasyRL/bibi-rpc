@@ -42,3 +42,4 @@ kitex_update.sh
 /codeql
 analz.sarif
 cache
+/ai/auto_insert_client
