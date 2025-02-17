@@ -441,6 +441,23 @@ const docTemplate = `{
         },
         "/bibi/user/avatar/search": {
             "post": {
+                "description": "search user's avatar by AI",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "SearchAvatar",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "头像",
+                        "name": "picture",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
                 "responses": {}
             }
         },

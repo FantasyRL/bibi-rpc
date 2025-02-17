@@ -78,6 +78,7 @@ func main() {
 			MaxQPS:         constants.MaxQPS,
 		}))
 
+	//go mypprof.Pprof()
 	err = svr.Run()
 
 	if err != nil {
@@ -86,7 +87,7 @@ func main() {
 }
 
 func EsHookLog() *eslogrus.ElasticHook {
-	hook, err := eslogrus.NewElasticHook(EsClient, config.ElasticSearch.Host, logrus.DebugLevel, constants.ElasticSearchIndexName)
+	hook, err := eslogrus.NewElasticHook(EsClient, config.ElasticSearch.Host, logrus.WarnLevel, constants.ElasticSearchIndexName)
 	if err != nil {
 		klog.Warn(err)
 	}

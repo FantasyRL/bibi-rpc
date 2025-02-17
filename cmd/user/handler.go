@@ -101,7 +101,8 @@ func (s *UserHandlerImpl) Avatar(ctx context.Context, req *user.AvatarRequest) (
 		resp.Base = pack.BuildBaseResp(err)
 		return resp, nil
 	}
-	resp.Base = pack.BuildBaseResp(nil)
+	err = service.NewAvatarService(ctx).ConvertAvatarToMilvus(req, UserResp.ID)
+	resp.Base = pack.BuildBaseResp(err)
 	resp.User = service.BuildUserResp(UserResp)
 	return
 }
@@ -128,4 +129,19 @@ func (s *UserHandlerImpl) GetUserList(ctx context.Context, req *user.GetUsersReq
 	resp.Base = pack.BuildBaseResp(err)
 	resp.UserList = service.BuildUsersResp(userResp)
 	return resp, nil
+}
+
+// SearchAvatar implements the UserHandlerImpl interface.
+func (s *UserHandlerImpl) SearchAvatar(ctx context.Context, req *user.SearchAvatarRequest) (resp *user.SearchAvatarResponse, err error) {
+	resp = new(user.SearchAvatarResponse)
+	userResp, err := service.NewAvatarService(ctx).SearchAvatar(req)
+	resp.Base = pack.BuildBaseResp(err)
+	resp.UserList = service.BuildUsersResp(userResp)
+	return resp, nil
+}
+
+// GetImageByAI implements the UserHandlerImpl interface.
+func (s *UserHandlerImpl) GetImageByAI(ctx context.Context, req *user.ImageAIRequest) (resp *user.ImageAIResponse, err error) {
+	// TODO: Your code here...
+	return
 }

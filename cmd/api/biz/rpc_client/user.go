@@ -117,3 +117,13 @@ func UserAvatar(ctx context.Context, req *user.AvatarRequest) (*user.AvatarRespo
 
 	return resp, nil
 }
+
+func UserSearchAvatar(ctx context.Context, req *user.SearchAvatarRequest) (*user.SearchAvatarResponse, error) {
+	resp, err := userClient.SearchAvatar(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}

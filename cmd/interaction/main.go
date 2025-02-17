@@ -36,15 +36,14 @@ func Init() {
 	dal.Init()
 
 	InitEs()
-	klog.SetLevel(klog.LevelDebug)
+	klog.SetLevel(klog.LevelWarn)
 	klog.SetLogger(kitexlogrus.NewLogger(kitexlogrus.WithHook(EsHookLog())))
-	tracer.InitJaegerTracer(constants.UserServiceName)
+	tracer.InitJaegerTracer(constants.InteractionServiceName)
 	rpc.InitVideoRPC()
 }
 
 func main() {
 	Init()
-	//注册到etcd
 	r, err := registry.NewDefaultNacosRegistry()
 	if err != nil {
 		panic(err)

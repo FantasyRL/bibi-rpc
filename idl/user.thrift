@@ -61,6 +61,16 @@ struct AvatarResponse{
     1: base.BaseResp base,
     2: optional base.User user,
 }
+//milvus
+struct SearchAvatarRequest{
+    1: binary picture,
+    2: required i64 page_num,
+}
+
+struct SearchAvatarResponse{
+    1: required base.BaseResp base,
+    2: optional list<base.User> user_list,
+}
 
 //rpc
 struct GetUsersRequest{
@@ -72,16 +82,13 @@ struct GetUsersResponse{
     2:list<base.User> user_list,
 }
 
-struct SearchAvatarRequest{
-    1: required i64 dim, // 向量维数
-    2: required list<double> vector,
-    3: required i64 page_num,
+struct ImageAIRequest{
+    1:binary picture,
+}
+struct ImageAIResponse{
+    1:list<double> vector,
 }
 
-struct SearchAvatarResponse{
-    1: required base.BaseResp base,
-    2: optional list<string> avatar,
-}
 
 
 service UserHandler {
@@ -93,4 +100,5 @@ service UserHandler {
     Switch2FAResponse Switch2FA(1:Switch2FARequest req)(api.post="/bibi/user/switch2fa"),
     SearchAvatarResponse SearchAvatar(1:SearchAvatarRequest req)(api.post="/bibi/user/avatar/search"),
     GetUsersResponse GetUserList(1:GetUsersRequest req),
+    ImageAIResponse GetImageByAI(1:ImageAIRequest req),
 }

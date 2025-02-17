@@ -7,5 +7,6 @@ import (
 
 func Init() {
 	db.InitMySQL()
+	db.InitMilvus()
 	cache.Init()
 }

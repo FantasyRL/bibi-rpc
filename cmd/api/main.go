@@ -14,6 +14,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app/server/registry"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/hertz-contrib/pprof"
 	"github.com/hertz-contrib/registry/nacos/v2"
 	hertztracer "github.com/hertz-contrib/tracer/hertz"
 )
@@ -75,5 +76,6 @@ func main() {
 	go monitor.Manager.Listen()
 
 	register(h)
+	pprof.Register(h)
 	h.Spin()
 }

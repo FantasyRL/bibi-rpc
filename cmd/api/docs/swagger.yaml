@@ -292,7 +292,19 @@ paths:
       summary: message_record
   /bibi/user/avatar/search:
     post:
+      consumes:
+      - json/form
+      description: search user's avatar by AI
+      parameters:
+      - description: 头像
+        in: formData
+        name: picture
+        required: true
+        type: file
+      produces:
+      - application/json
       responses: {}
+      summary: SearchAvatar
   /bibi/user/avatar/upload:
     put:
       consumes:

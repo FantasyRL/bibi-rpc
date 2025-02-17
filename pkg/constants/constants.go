@@ -19,6 +19,7 @@ const (
 	LikeTableName        = "like"
 	FollowTableName      = "follow"
 	VideoTableName       = "video"
+	AvatarMilvusName     = "avatar"
 
 	// limit
 	MaxConnections     = 1000
@@ -77,4 +78,7 @@ const (
 	FollowerCountZset     = "follower_counts"
 	FollowingCountZset    = "following_counts"
 	FriendCountZset       = "friend_counts"
+
+	//ai
+	Dim = 1280
 )

@@ -41,8 +41,8 @@ services:
 #    image: registry.cn-hangzhou.aliyuncs.com/fanr/etcd:3.5
     container_name: etcd
     ports:
-      - "2389:2379"
-      - "2390:2380"
+      - "2379:2379"
+      - "2380:2380"
     volumes:
       - ./data/etcd/data:/bitnami/etcd-data
     environment:
@@ -184,7 +184,7 @@ services:
     networks:
       - bibi
 
-  standalone:
+  milvus:
     container_name: milvus-standalone
     image: milvusdb/milvus:v2.4.4
 #    image: registry.cn-hangzhou.aliyuncs.com/fanr/milvus:v2.4.4

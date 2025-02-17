@@ -16,7 +16,9 @@ type Client interface {
 	Info(ctx context.Context, req *user.InfoRequest, callOptions ...callopt.Option) (r *user.InfoResponse, err error)
 	Avatar(ctx context.Context, req *user.AvatarRequest, callOptions ...callopt.Option) (r *user.AvatarResponse, err error)
 	Switch2FA(ctx context.Context, req *user.Switch2FARequest, callOptions ...callopt.Option) (r *user.Switch2FAResponse, err error)
+	SearchAvatar(ctx context.Context, req *user.SearchAvatarRequest, callOptions ...callopt.Option) (r *user.SearchAvatarResponse, err error)
 	GetUserList(ctx context.Context, req *user.GetUsersRequest, callOptions ...callopt.Option) (r *user.GetUsersResponse, err error)
+	GetImageByAI(ctx context.Context, req *user.ImageAIRequest, callOptions ...callopt.Option) (r *user.ImageAIResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -73,7 +75,17 @@ func (p *kUserHandlerClient) Switch2FA(ctx context.Context, req *user.Switch2FAR
 	return p.kClient.Switch2FA(ctx, req)
 }
 
+func (p *kUserHandlerClient) SearchAvatar(ctx context.Context, req *user.SearchAvatarRequest, callOptions ...callopt.Option) (r *user.SearchAvatarResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.SearchAvatar(ctx, req)
+}
+
 func (p *kUserHandlerClient) GetUserList(ctx context.Context, req *user.GetUsersRequest, callOptions ...callopt.Option) (r *user.GetUsersResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetUserList(ctx, req)
+}
+
+func (p *kUserHandlerClient) GetImageByAI(ctx context.Context, req *user.ImageAIRequest, callOptions ...callopt.Option) (r *user.ImageAIResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetImageByAI(ctx, req)
 }

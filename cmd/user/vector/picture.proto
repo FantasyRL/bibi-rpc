@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "./vector";
+
+message GetVectorRequest{
+  bytes image =1;
+}
+
+message GetVectorResponse{
+  repeated float vector = 1;
+}
+
+service Vector {
+  rpc GetPictureVector (GetVectorRequest) returns (GetVectorResponse);
+}

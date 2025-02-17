@@ -3019,10 +3019,8 @@ func (p *AvatarResponse) String() string {
 }
 
 type SearchAvatarRequest struct {
-	// 向量维数
-	Dim     int64     `thrift:"dim,1,required" form:"dim,required" json:"dim,required" query:"dim,required"`
-	Vector  []float64 `thrift:"vector,2,required" form:"vector,required" json:"vector,required" query:"vector,required"`
-	PageNum int64     `thrift:"page_num,3,required" form:"page_num,required" json:"page_num,required" query:"page_num,required"`
+	Picture []byte `thrift:"picture,1" form:"picture" json:"picture" query:"picture"`
+	PageNum int64  `thrift:"page_num,2,required" form:"page_num,required" json:"page_num,required" query:"page_num,required"`
 }
 
 func NewSearchAvatarRequest() *SearchAvatarRequest {
@@ -3032,12 +3030,8 @@ func NewSearchAvatarRequest() *SearchAvatarRequest {
 func (p *SearchAvatarRequest) InitDefault() {
 }
 
-func (p *SearchAvatarRequest) GetDim() (v int64) {
-	return p.Dim
-}
-
-func (p *SearchAvatarRequest) GetVector() (v []float64) {
-	return p.Vector
+func (p *SearchAvatarRequest) GetPicture() (v []byte) {
+	return p.Picture
 }
 
 func (p *SearchAvatarRequest) GetPageNum() (v int64) {
@@ -3045,17 +3039,14 @@ func (p *SearchAvatarRequest) GetPageNum() (v int64) {
 }
 
 var fieldIDToName_SearchAvatarRequest = map[int16]string{
-	1: "dim",
-	2: "vector",
-	3: "page_num",
+	1: "picture",
+	2: "page_num",
 }
 
 func (p *SearchAvatarRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
-	var issetDim bool = false
-	var issetVector bool = false
 	var issetPageNum bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
@@ -3073,26 +3064,16 @@ func (p *SearchAvatarRequest) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetDim = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 2:
-			if fieldTypeId == thrift.LIST {
-				if err = p.ReadField2(iprot); err != nil {
-					goto ReadFieldError
-				}
-				issetVector = true
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 3:
 			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField3(iprot); err != nil {
+				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetPageNum = true
@@ -3112,18 +3093,8 @@ func (p *SearchAvatarRequest) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
-	if !issetDim {
-		fieldId = 1
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetVector {
-		fieldId = 2
-		goto RequiredFieldNotSetError
-	}
-
 	if !issetPageNum {
-		fieldId = 3
+		fieldId = 2
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -3146,39 +3117,16 @@ RequiredFieldNotSetError:
 
 func (p *SearchAvatarRequest) ReadField1(iprot thrift.TProtocol) error {
 
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	var _field []byte
+	if v, err := iprot.ReadBinary(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = []byte(v)
 	}
-	p.Dim = _field
+	p.Picture = _field
 	return nil
 }
 func (p *SearchAvatarRequest) ReadField2(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
-	if err != nil {
-		return err
-	}
-	_field := make([]float64, 0, size)
-	for i := 0; i < size; i++ {
-
-		var _elem float64
-		if v, err := iprot.ReadDouble(); err != nil {
-			return err
-		} else {
-			_elem = v
-		}
-
-		_field = append(_field, _elem)
-	}
-	if err := iprot.ReadListEnd(); err != nil {
-		return err
-	}
-	p.Vector = _field
-	return nil
-}
-func (p *SearchAvatarRequest) ReadField3(iprot thrift.TProtocol) error {
 
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
@@ -3204,10 +3152,6 @@ func (p *SearchAvatarRequest) Write(oprot thrift.TProtocol) (err error) {
 			fieldId = 2
 			goto WriteFieldError
 		}
-		if err = p.writeField3(oprot); err != nil {
-			fieldId = 3
-			goto WriteFieldError
-		}
 	}
 	if err = oprot.WriteFieldStop(); err != nil {
 		goto WriteFieldStopError
@@ -3227,10 +3171,10 @@ WriteStructEndError:
 }
 
 func (p *SearchAvatarRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("dim", thrift.I64, 1); err != nil {
+	if err = oprot.WriteFieldBegin("picture", thrift.STRING, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.Dim); err != nil {
+	if err := oprot.WriteBinary([]byte(p.Picture)); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -3244,18 +3188,10 @@ WriteFieldEndError:
 }
 
 func (p *SearchAvatarRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("vector", thrift.LIST, 2); err != nil {
+	if err = oprot.WriteFieldBegin("page_num", thrift.I64, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.DOUBLE, len(p.Vector)); err != nil {
-		return err
-	}
-	for _, v := range p.Vector {
-		if err := oprot.WriteDouble(v); err != nil {
-			return err
-		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
+	if err := oprot.WriteI64(p.PageNum); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -3268,23 +3204,6 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
-func (p *SearchAvatarRequest) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("page_num", thrift.I64, 3); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.PageNum); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
-}
-
 func (p *SearchAvatarRequest) String() string {
 	if p == nil {
 		return "<nil>"
@@ -3294,8 +3213,8 @@ func (p *SearchAvatarRequest) String() string {
 }
 
 type SearchAvatarResponse struct {
-	Base   *BaseResp `thrift:"base,1,required" form:"base,required" json:"base,required" query:"base,required"`
-	Avatar []string  `thrift:"avatar,2,optional" form:"avatar" json:"avatar,omitempty" query:"avatar"`
+	Base     *BaseResp `thrift:"base,1,required" form:"base,required" json:"base,required" query:"base,required"`
+	UserList []*User   `thrift:"user_list,2,optional" form:"user_list" json:"user_list,omitempty" query:"user_list"`
 }
 
 func NewSearchAvatarResponse() *SearchAvatarResponse {
@@ -3314,26 +3233,26 @@ func (p *SearchAvatarResponse) GetBase() (v *BaseResp) {
 	return p.Base
 }
 
-var SearchAvatarResponse_Avatar_DEFAULT []string
+var SearchAvatarResponse_UserList_DEFAULT []*User
 
-func (p *SearchAvatarResponse) GetAvatar() (v []string) {
-	if !p.IsSetAvatar() {
-		return SearchAvatarResponse_Avatar_DEFAULT
+func (p *SearchAvatarResponse) GetUserList() (v []*User) {
+	if !p.IsSetUserList() {
+		return SearchAvatarResponse_UserList_DEFAULT
 	}
-	return p.Avatar
+	return p.UserList
 }
 
 var fieldIDToName_SearchAvatarResponse = map[int16]string{
 	1: "base",
-	2: "avatar",
+	2: "user_list",
 }
 
 func (p *SearchAvatarResponse) IsSetBase() bool {
 	return p.Base != nil
 }
 
-func (p *SearchAvatarResponse) IsSetAvatar() bool {
-	return p.Avatar != nil
+func (p *SearchAvatarResponse) IsSetUserList() bool {
+	return p.UserList != nil
 }
 
 func (p *SearchAvatarResponse) Read(iprot thrift.TProtocol) (err error) {
@@ -3421,14 +3340,14 @@ func (p *SearchAvatarResponse) ReadField2(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	_field := make([]string, 0, size)
+	_field := make([]*User, 0, size)
+	values := make([]User, size)
 	for i := 0; i < size; i++ {
+		_elem := &values[i]
+		_elem.InitDefault()
 
-		var _elem string
-		if v, err := iprot.ReadString(); err != nil {
+		if err := _elem.Read(iprot); err != nil {
 			return err
-		} else {
-			_elem = v
 		}
 
 		_field = append(_field, _elem)
@@ -3436,7 +3355,7 @@ func (p *SearchAvatarResponse) ReadField2(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.Avatar = _field
+	p.UserList = _field
 	return nil
 }
 
@@ -3490,15 +3409,15 @@ WriteFieldEndError:
 }
 
 func (p *SearchAvatarResponse) writeField2(oprot thrift.TProtocol) (err error) {
-	if p.IsSetAvatar() {
-		if err = oprot.WriteFieldBegin("avatar", thrift.LIST, 2); err != nil {
+	if p.IsSetUserList() {
+		if err = oprot.WriteFieldBegin("user_list", thrift.LIST, 2); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteListBegin(thrift.STRING, len(p.Avatar)); err != nil {
+		if err := oprot.WriteListBegin(thrift.STRUCT, len(p.UserList)); err != nil {
 			return err
 		}
-		for _, v := range p.Avatar {
-			if err := oprot.WriteString(v); err != nil {
+		for _, v := range p.UserList {
+			if err := v.Write(oprot); err != nil {
 				return err
 			}
 		}

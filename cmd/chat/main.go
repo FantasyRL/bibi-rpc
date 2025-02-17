@@ -6,6 +6,7 @@ import (
 	"bibi/config"
 	"bibi/kitex_gen/chat/chathandler"
 	"bibi/pkg/constants"
+	"bibi/pkg/tracer"
 	"bibi/pkg/utils"
 	"bibi/pkg/utils/eslogrus"
 	"crypto/tls"
@@ -18,6 +19,7 @@ import (
 	elastic "github.com/elastic/go-elasticsearch/v8"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/kitex-contrib/registry-nacos/registry"
+	opentracing "github.com/kitex-contrib/tracer-opentracing"
 	"github.com/sirupsen/logrus"
 	"net"
 	"net/http"
@@ -35,9 +37,9 @@ func Init() {
 	mq.Init()
 
 	InitEs()
-	klog.SetLevel(klog.LevelDebug)
+	klog.SetLevel(klog.LevelWarn)
 	klog.SetLogger(kitexlogrus.NewLogger(kitexlogrus.WithHook(EsHookLog())))
-
+	tracer.InitJaegerTracer(constants.ChatServiceName)
 }
 
 func main() {
@@ -72,6 +74,7 @@ func main() {
 			&rpcinfo.EndpointBasicInfo{
 				ServiceName: constants.ChatServiceName,
 			}),
+		server.WithSuite(opentracing.NewDefaultServerSuite()),
 		server.WithLimit(&limit.Option{
 			MaxConnections: constants.MaxConnections,
 			MaxQPS:         constants.MaxQPS,

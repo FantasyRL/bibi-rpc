@@ -47,4 +47,7 @@ func InitMilvus() {
 		klog.Fatal("milvus connect error")
 	}
 	MilvusCli = cli
+	if err := CreateCollection(context.Background()); err != nil {
+		klog.Fatal("create collection error")
+	}
 }

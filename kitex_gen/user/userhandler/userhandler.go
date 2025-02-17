@@ -48,10 +48,24 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"SearchAvatar": kitex.NewMethodInfo(
+		searchAvatarHandler,
+		newUserHandlerSearchAvatarArgs,
+		newUserHandlerSearchAvatarResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 	"GetUserList": kitex.NewMethodInfo(
 		getUserListHandler,
 		newUserHandlerGetUserListArgs,
 		newUserHandlerGetUserListResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"GetImageByAI": kitex.NewMethodInfo(
+		getImageByAIHandler,
+		newUserHandlerGetImageByAIArgs,
+		newUserHandlerGetImageByAIResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -211,6 +225,24 @@ func newUserHandlerSwitch2FAResult() interface{} {
 	return user.NewUserHandlerSwitch2FAResult()
 }
 
+func searchAvatarHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserHandlerSearchAvatarArgs)
+	realResult := result.(*user.UserHandlerSearchAvatarResult)
+	success, err := handler.(user.UserHandler).SearchAvatar(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserHandlerSearchAvatarArgs() interface{} {
+	return user.NewUserHandlerSearchAvatarArgs()
+}
+
+func newUserHandlerSearchAvatarResult() interface{} {
+	return user.NewUserHandlerSearchAvatarResult()
+}
+
 func getUserListHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*user.UserHandlerGetUserListArgs)
 	realResult := result.(*user.UserHandlerGetUserListResult)
@@ -227,6 +259,24 @@ func newUserHandlerGetUserListArgs() interface{} {
 
 func newUserHandlerGetUserListResult() interface{} {
 	return user.NewUserHandlerGetUserListResult()
+}
+
+func getImageByAIHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserHandlerGetImageByAIArgs)
+	realResult := result.(*user.UserHandlerGetImageByAIResult)
+	success, err := handler.(user.UserHandler).GetImageByAI(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserHandlerGetImageByAIArgs() interface{} {
+	return user.NewUserHandlerGetImageByAIArgs()
+}
+
+func newUserHandlerGetImageByAIResult() interface{} {
+	return user.NewUserHandlerGetImageByAIResult()
 }
 
 type kClient struct {
@@ -289,11 +339,31 @@ func (p *kClient) Switch2FA(ctx context.Context, req *user.Switch2FARequest) (r 
 	return _result.GetSuccess(), nil
 }
 
+func (p *kClient) SearchAvatar(ctx context.Context, req *user.SearchAvatarRequest) (r *user.SearchAvatarResponse, err error) {
+	var _args user.UserHandlerSearchAvatarArgs
+	_args.Req = req
+	var _result user.UserHandlerSearchAvatarResult
+	if err = p.c.Call(ctx, "SearchAvatar", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
 func (p *kClient) GetUserList(ctx context.Context, req *user.GetUsersRequest) (r *user.GetUsersResponse, err error) {
 	var _args user.UserHandlerGetUserListArgs
 	_args.Req = req
 	var _result user.UserHandlerGetUserListResult
 	if err = p.c.Call(ctx, "GetUserList", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetImageByAI(ctx context.Context, req *user.ImageAIRequest) (r *user.ImageAIResponse, err error) {
+	var _args user.UserHandlerGetImageByAIArgs
+	_args.Req = req
+	var _result user.UserHandlerGetImageByAIResult
+	if err = p.c.Call(ctx, "GetImageByAI", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

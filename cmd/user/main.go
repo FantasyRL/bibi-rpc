@@ -2,33 +2,45 @@ package main
 
 import (
 	"bibi/cmd/user/dal"
+	"bibi/cmd/user/rpc"
 	"bibi/config"
 	user "bibi/kitex_gen/user/userhandler"
 	"bibi/pkg/constants"
 	"bibi/pkg/tracer"
 	"bibi/pkg/utils"
+	"bibi/pkg/utils/eslogrus"
+	"crypto/tls"
+	"fmt"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	"github.com/cloudwego/netpoll"
+	elastic "github.com/elastic/go-elasticsearch/v8"
+	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/kitex-contrib/registry-nacos/registry"
 	kopentracing "github.com/kitex-contrib/tracer-opentracing"
+	"github.com/sirupsen/logrus"
 	"log"
+	"net"
+	"net/http"
+	"time"
 )
 
 var (
 	listenAddr string
 	lu         = new(LimiterUpdater)
+	EsClient   *elastic.Client
 )
-
-//var GloTracer opentracing.Tracer
 
 func Init() {
 	config.Init(constants.UserServiceName)
 	dal.Init()
 	tracer.InitJaegerTracer(constants.UserServiceName)
-	//GloTracer = tracer.NewJaegerTracer(constants.UserServiceName, listenAddr)
+	InitEs()
+	klog.SetLevel(klog.LevelWarn)
+	klog.SetLogger(kitexlogrus.NewLogger(kitexlogrus.WithHook(EsHookLog())))
+	rpc.Init()
 }
 
 func main() {
@@ -91,9 +103,39 @@ func main() {
 		),
 	)
 
+	//go pprof.Pprof()
 	err = svr.Run()
 
 	if err != nil {
 		klog.Error(err.Error())
 	}
+}
+
+func EsHookLog() *eslogrus.ElasticHook {
+	hook, err := eslogrus.NewElasticHook(EsClient, config.ElasticSearch.Host, logrus.WarnLevel, constants.ElasticSearchIndexName)
+	if err != nil {
+		klog.Warn(err)
+	}
+
+	return hook
+}
+
+func InitEs() {
+	esConn := fmt.Sprintf("http://%s", config.ElasticSearch.Addr)
+	cfg := elastic.Config{
+		Addresses: []string{esConn},
+		Transport: &http.Transport{
+			MaxIdleConnsPerHost:   10,
+			ResponseHeaderTimeout: time.Second,
+			DialContext:           (&net.Dialer{Timeout: time.Second}).DialContext,
+			TLSClientConfig: &tls.Config{
+				MinVersion: tls.VersionTLS12,
+			},
+		},
+	}
+	client, err := elastic.NewClient(cfg)
+	if err != nil {
+		klog.Fatal(err)
+	}
+	EsClient = client
 }

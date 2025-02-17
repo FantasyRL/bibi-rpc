@@ -247,6 +247,11 @@ func GetAccessToken(ctx context.Context, c *app.RequestContext) {
 }
 
 // SearchAvatar .
+// @Summary SearchAvatar
+// @Description search user's avatar by AI
+// @Accept json/form
+// @Produce json
+// @Param picture formData file true "头像"
 // @router /bibi/user/avatar/search [POST]
 func SearchAvatar(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -256,8 +261,43 @@ func SearchAvatar(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
-
+	file, err := c.FormFile("picture")
 	resp := new(api.SearchAvatarResponse)
+
+	fileExt := filepath.Ext(file.Filename)
+	allowExtMap := map[string]bool{
+		".jpg":  true,
+		".png":  true,
+		".jpeg": true,
+	}
+	if !pack.IsAllowExt(fileExt, allowExtMap) {
+		resp.Base = pack.ConvertToAPIBaseResp(pack.BuildBaseResp(errno.ParamError))
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+	fileBinary, err := pack.FileToByte(file)
+	if err != nil {
+		resp.Base = pack.ConvertToAPIBaseResp(pack.BuildBaseResp(errno.ReadFileError))
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+
+	rpcResp, err := rpc_client.UserSearchAvatar(ctx, &user.SearchAvatarRequest{
+		Picture: fileBinary,
+		PageNum: 1,
+	})
+	if err != nil {
+		pack.SendRPCFailResp(c, err)
+		return
+	}
+
+	resp.Base = pack.ConvertToAPIBaseResp(rpcResp.Base)
+	if resp.Base.Code != errno.SuccessCode {
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+
+	resp.UserList = pack.ConvertToAPIUsers(rpcResp.UserList)
 
 	c.JSON(consts.StatusOK, resp)
 }

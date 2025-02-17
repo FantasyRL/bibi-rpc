@@ -87,14 +87,13 @@ struct AvatarResponse{
 }
 
 struct SearchAvatarRequest{
-    1: required i64 dim, // 向量维数
-    2: required list<double> vector,
-    3: required i64 page_num,
+    1: binary picture,
+    2: required i64 page_num,
 }
 
 struct SearchAvatarResponse{
     1: required BaseResp base,
-    2: optional list<string> avatar,
+    2: optional list<User> user_list,
 }
 
 service UserHandler {

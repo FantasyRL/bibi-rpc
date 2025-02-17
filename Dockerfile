@@ -22,13 +22,9 @@ ENV TZ Asia/Shanghai
 ENV service api
 EXPOSE 10002
 WORKDIR /app
-#COPY --from=builder /app/output /app/output
 COPY --from=builder /app/config /app/config
-#COPY --from=builder /app/pkg /app/pkg
 COPY --from=builder /app/cmd /app/cmd
-#COPY --from=builder /app/kitex_gen /app/kitex_gen
 
-#CMD ["sh","-c","./output/${service}/${service}"]
 CMD ["sh","-c","sh cmd/${service}/output/bootstrap.sh"]
 
 

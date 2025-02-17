@@ -60,9 +60,10 @@ func Update2FA(totp string, uid int64) error {
 
 func PutAvatar(ctx context.Context, userModel *User) (*User, error) {
 	userResp := new(User)
-	if err := DB.WithContext(ctx).Where("id = ?", userModel.ID).Update("avatar", userModel.Avatar).First(userResp).Error; err != nil {
+	if err := DB.WithContext(ctx).Where("id = ?", userModel.ID).First(userResp).Update("avatar", userModel.Avatar).Error; err != nil {
 		return nil, err
 	}
+	userResp.Avatar = userModel.Avatar
 	return userResp, nil
 }
 

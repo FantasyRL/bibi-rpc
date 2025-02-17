@@ -29,6 +29,7 @@ const (
 	Enable2FAErrCode
 	Unable2FAErrCode
 	Verify2FAErrCode
+	ConvertToMilvusErrCode
 )
 
 const (
@@ -42,6 +43,7 @@ const (
 	AuthErrMsg                    = "It is not your account"
 	ReadFileErrMsg                = "Error when read file"
 	UploadFileErrMsg              = "Upload file error"
+	ConvertToMilvusErrMsg         = "convert to milvus error"
 	LikeExistErrMsg               = "You have liked this target"
 	LikeNotExistErrMsg            = "You don't like this video"
 	LikeActionErrMsg              = "Favorite add failed"
@@ -88,6 +90,7 @@ var (
 	Enable2FAError               = NewErrNo(Enable2FAErrCode, Enable2FAErrMsg)
 	Unable2FAError               = NewErrNo(Unable2FAErrCode, Unable2FAErrMsg)
 	Verify2FAError               = NewErrNo(Verify2FAErrCode, Verify2FAErrMsg)
+	ConvertToMilvusError         = NewErrNo(ConvertToMilvusErrCode, ConvertToMilvusErrMsg)
 
 	WebSocketSuccess             = NewErrNo(WebSocketSuccessCode, WebSocketSuccessMsg)
 	WebSocketLogoutSuccess       = NewErrNo(WebSocketLogoutSuccessCode, WebSocketLogoutSuccessMsg)
